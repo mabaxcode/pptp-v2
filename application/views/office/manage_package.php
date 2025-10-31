@@ -45,18 +45,49 @@
                         <thead>
                           <tr>
                             <th width="20%">Package Name</th>
-                            <th width="50%">Description</th>
-                            <th width="20%">Cover Photo</th>
-                            <th width="10%">Action</th>
+                            <th width="45%">Description</th>
+                            <th width="15%">Cover Photo</th>
+                            <th width="15%">Action</th>
                           </tr>
                         </thead>
                         <tbody>
+                          <?php foreach ($packages as $package): ?>
                           <tr>
-                            <td>Tiger Nixon</td>
-                            <td>Experience breathtaking sunsets and pristine white-washed villages overlooking the azure Aegean Sea.</td>
-                            <td>61</td>
-                            <td>$320,800</td>
+                            <td><?php echo $package['package_name']; ?></td>
+                            <td>
+                              <?php echo $package['description']; ?>
+                              <br>
+                              <strong>Categories:</strong>
+                              <?php
+                              $category_names = array();
+                              $category_ids = json_decode($package['categories'], true);
+                              if (!empty($category_ids)) {
+                                  foreach ($category_ids as $cat_id) {
+                                      $this->db->where('id', $cat_id);
+                                      $category = $this->db->get('categories')->row();
+                                      if ($category) {
+                                          $category_names[] = $category->name;
+                                          echo '&nbsp;<span class="badge badge-primary">' . $category->name . '</span>';
+                                      }
+                                  }
+                              }
+                             
+                              ?>
+                              <?//php echo implode(', ', $category_names); ?>
+                            </td>
+                            <td align="center">
+                              <?php if (!empty($package['cover_photo'])): ?>
+                                <img src="<?php echo base_url($package['cover_photo']); ?>" alt="Cover Photo" width="100">
+                              <?php else: ?>
+                                No Photo
+                              <?php endif; ?>
+                            </td>
+                            <td>
+                              <a href="<?php echo base_url('office/edit_package/' . $package['id']); ?>" class="btn btn-sm btn-warning">Edit</a>
+                              <a href="<?php echo base_url('office/delete_package/' . $package['id']); ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this package?');">Delete</a>
+                            </td>
                           </tr>
+                          <?php endforeach; ?>
                         </tbody>
                       </table>
                     </div>

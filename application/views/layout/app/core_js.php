@@ -36,6 +36,7 @@
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script>
       var base_url = "<?php echo base_url(); ?>";
+      // alert(base_url);
       $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
         type: "line",
         height: "70",
@@ -62,7 +63,11 @@
         lineColor: "#ffa534",
         fillColor: "rgba(255, 165, 52, .14)",
       });
-      $("#basic-datatables").DataTable({});
+
+      $("#basic-datatables").DataTable({
+        // remove sorting
+        "ordering": false
+      });
 
       $(document).on('click', '.add-category', function(e) {
         e.preventDefault;
@@ -91,7 +96,7 @@
               });
               return;
             }
-            
+            $("#addRowModal").modal('hide');
             $.notify({
               icon: 'icon-bell',
               title: 'Notification',
@@ -106,7 +111,7 @@
             });
             // set timer to reload page after 1 second
             setTimeout(function() {
-              $("#addRowModal").modal('hide');
+              
               location.reload();
             }, 1000);
             
@@ -132,5 +137,27 @@
           reader.readAsDataURL(file);
         }
       });
+
+      
+
+      
+
+      <?php if ($this->session->flashdata('success')) { ?>
+      $.notify({
+          icon: 'icon-bell',
+          title: 'Success !',
+          message: "<?php echo $this->session->flashdata('success'); ?>",
+        },{
+          type: 'secondary',
+          placement: {
+            from: "top",
+            align: "right"
+          },
+          time: 1000,
+        });
+    <?php } ?>
+
+
+
 
     </script>

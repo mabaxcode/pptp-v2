@@ -50,5 +50,38 @@
     </div>
     <!--   Core JS Files   -->
     <?php $this->load->view('layout/app/core_js'); ?>
+    <script>
+      $(document).on('click', '.edit-category', function(e) {
+        e.preventDefault();
+        var categoryId = $(this).data('id');
+        var categoryName = $(this).data('name');
+
+        $('#edit_category_id').val(categoryId);
+        $('#edit_category_name').val(categoryName);
+      });
+
+      $(document).on('click', '.update-category', function(e) {
+        e.preventDefault();
+        var formData = $('#form-edit-category').serialize();
+        $.ajax({
+          type: "POST",
+          url: base_url + 'office/update_category',
+          data: formData,
+          async: true,
+          dataType: 'json',
+          success: function(data) {
+            console.log(data);
+
+            
+            $("#editCategoryModal").modal('hide');
+            window.location.href = base_url + 'office/manage_category';
+            
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            console.log(textStatus, errorThrown);
+          }
+        });
+      });
+    </script>
   </body>
 </html>

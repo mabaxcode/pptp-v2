@@ -56,6 +56,21 @@
     transition: border-color 0.3s ease;
   }
 
+  table.dataTable thead th {
+    background-color: #233e4b !important;
+    color: #fff !important;
+  }
+
+  .alert,
+  .bootstrap-notify-container,
+  .notify,
+  [data-notify="container"] {
+    z-index: 99999 !important;
+  }
+
+
+
+
   .cover-upload:hover {
     border-color: #007bff;
   }
