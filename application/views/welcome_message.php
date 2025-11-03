@@ -51,7 +51,7 @@
           <li><a href="#" class="active">Home</a></li>
           <li><a href="#">About</a></li>
           <!-- <li><a href="destinations.html">Destinations</a></li> -->
-          <li><a href="#">Package</a></li>
+          <li><a href="<?php echo base_url('welcome/package'); ?>">Package</a></li>
           <li><a href="#">Gallery</a></li>
           <!-- <li><a href="blog.html">Blog</a></li> -->
           <!-- <li class="dropdown"><a href="#"><span>More Pages</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
@@ -167,12 +167,12 @@
                 </div>
                 <div class="about-content">
                   <p>Welcome to Pulau Perhentian Travel Package — your trusted travel partner to one of Malaysia’s most beautiful island destinations!</p>
-                  <p>We specialize in helping travelers experience the magic of Pulau Perhentian, offering carefully curated travel packages that combine comfort, adventure, and authentic island charm. From crystal-clear waters and white sandy beaches to stunning coral reefs, we’re here to make your island dream a reality.</p>
+                  <p>We specialize in helping travelers experience the magic of Pulau Perhentian, offering carefully curated travel packages that combine comfort, adventure, and authentic island charm.</p>
 
                   <div class="feature-list">
                     <div class="feature-item">
                       <i class="bi bi-check-circle-fill"></i>
-                      <span>Comfortable Resorts – We partner with the best-rated resorts in Pulau Perhentian to ensure your stay is relaxing and worry-free.</span>
+                      <span>Comfortable – The best-rated resorts in Pulau Perhentian to ensure your stay is relaxing and worry-free.</span>
                     </div>
                     <div class="feature-item">
                       <i class="bi bi-check-circle-fill"></i>
@@ -222,6 +222,7 @@
           </div>
         </div><!-- End Main Content Grid -->
 
+        <?php /*
         <!-- Why Choose Us Section -->
         <div class="why-choose-wrapper">
           <div class="section-header text-center">
@@ -285,6 +286,8 @@
           </div>
         </div><!-- End Why Choose Us Section -->
 
+        */?>
+
       </div>
 
     </section><!-- /Why Us Section -->
@@ -295,124 +298,44 @@
       <!-- Section Title -->
       <div class="container section-title">
         <h2>Featured Destinations</h2>
-        <div><span>Check Our</span> <span class="description-title">Featured Package</span></div>
+        <div><span>Check Our</span> <span class="description-title">Package</span></div>
       </div><!-- End Section Title -->
 
       <div class="container">
 
         <div class="row gy-4">
-
+          <?//php print_r($packages); ?>
+          <?php foreach($packages as $package): ?>
+            
           <div class="col-lg-4 col-md-6">
             <div class="destination-card">
               <div class="image-wrapper">
-                <img src="<?php echo base_url(); ?>assets2/img/travel/img1.jpg" alt="Destination" class="img-fluid">
+                <img src="<?php echo base_url($package['cover_photo']); ?>" alt="Destination" class="img-fluid">
                 <div class="overlay">
-                  <div class="badge">Popular</div>
+                  <div class="badge"><?php echo $package['tag'] ?? ''; ?></div>
                 </div>
               </div>
               <div class="content">
-                <h4>Package 1</h4>
-                <p>Experience breathtaking sunsets and pristine white-washed villages overlooking the azure Aegean Sea.</p>
-                <div class="features">
-                  <span class="feature-tag">Romantic</span>
-                  <span class="feature-tag">Luxury</span>
-                </div>
-                <div class="card-footer">
-                  <div class="tours-count">12 Tours Available</div>
-                  <a href="#" class="explore-btn">
-                    Explore <i class="bi bi-arrow-right"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div><!-- End Destination Card -->
+                <h4><?php echo $package['package_name'] ?? 'N/A'; ?></h4>
+                <p><?php $desc = $package['description'];
+    echo strlen($desc) > 150 ? substr($desc, 0, 100) . '...' : $desc; ?></p>
 
-          <div class="col-lg-4 col-md-6">
-            <div class="destination-card">
-              <div class="image-wrapper">
-                <img src="<?php echo base_url(); ?>assets2/img/travel/img1.jpg" alt="Destination" class="img-fluid">
-                <div class="overlay">
-                  <div class="badge featured">Editor's Pick</div>
-                </div>
-              </div>
-              <div class="content">
-                <h4>Package 2</h4>
-                <p>Discover tropical paradise with ancient temples, lush rice terraces, and world-class beaches.</p>
+                <!-- load the categories -->
+                 <!-- the categories data is an json["11","2"]-->
+                 <?php $categories = json_decode($package['categories'], true); ?>
                 <div class="features">
-                  <span class="feature-tag">Adventure</span>
-                  <span class="feature-tag">Culture</span>
+                  <?php 
+                  foreach($categories as $category): 
+                  $cat = get_code_desc($category, 'categories');
+                  ?>
+                    <?php if($cat): ?><span class="feature-tag"><?php echo $cat['name'] ?></span><?php endif; ?>
+                  <?php endforeach; ?>
                 </div>
-                <div class="card-footer">
-                  <div class="tours-count">18 Tours Available</div>
-                  <a href="#" class="explore-btn">
-                    Explore <i class="bi bi-arrow-right"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div><!-- End Destination Card -->
 
-          <div class="col-lg-4 col-md-6">
-            <div class="destination-card">
-              <div class="image-wrapper">
-                <img src="<?php echo base_url(); ?>assets2/img/travel/img1.jpg" alt="Destination" class="img-fluid">
-                <div class="overlay">
-                  <div class="badge new">New</div>
-                </div>
-              </div>
-              <div class="content">
-                <h4>Package 3</h4>
-                <p>Trek through ancient Incan ruins and witness one of the world's most spectacular archaeological sites.</p>
-                <div class="features">
-                  <span class="feature-tag">Adventure</span>
-                  <span class="feature-tag">History</span>
-                </div>
-                <div class="card-footer">
-                  <div class="tours-count">8 Tours Available</div>
-                  <a href="#" class="explore-btn">
-                    Explore <i class="bi bi-arrow-right"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div><!-- End Destination Card -->
 
-          <div class="col-lg-4 col-md-6">
-            <div class="destination-card">
-              <div class="image-wrapper">
-                <img src="<?php echo base_url(); ?>assets2/img/travel/img1.jpg" alt="Destination" class="img-fluid">
-              </div>
-              <div class="content">
-                <h4>Package 4</h4>
-                <p>Immerse yourself in traditional Japanese culture with beautiful temples, gardens, and historic districts.</p>
-                <div class="features">
-                  <span class="feature-tag">Culture</span>
-                  <span class="feature-tag">Peaceful</span>
-                </div>
                 <div class="card-footer">
-                  <div class="tours-count">15 Tours Available</div>
-                  <a href="#" class="explore-btn">
-                    Explore <i class="bi bi-arrow-right"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div><!-- End Destination Card -->
 
-          <div class="col-lg-4 col-md-6">
-            <div class="destination-card">
-              <div class="image-wrapper">
-                <img src="<?php echo base_url(); ?>assets2/img/travel/img1.jpg" alt="Destination" class="img-fluid">
-              </div>
-              <div class="content">
-                <h4>Package 5</h4>
-                <p>Adventure awaits in pristine mountain landscapes with world-class skiing and hiking opportunities.</p>
-                <div class="features">
-                  <span class="feature-tag">Adventure</span>
-                  <span class="feature-tag">Nature</span>
-                </div>
-                <div class="card-footer">
-                  <div class="tours-count">22 Tours Available</div>
+                  <div class="tours-count" style="color: #ff0000; font-size: 1.0rem;"><small style="color: #949a98ff;"><i class="bi bi-clock"></i> <?php echo $package['duration']; ?></small><br>RM5000</div>
                   <a href="#" class="explore-btn">
                     Explore <i class="bi bi-arrow-right"></i>
                   </a>
@@ -420,28 +343,7 @@
               </div>
             </div>
           </div><!-- End Destination Card -->
-
-          <div class="col-lg-4 col-md-6">
-            <div class="destination-card">
-              <div class="image-wrapper">
-                <img src="<?php echo base_url(); ?>assets2/img/travel/img1.jpg" alt="Destination" class="img-fluid">
-              </div>
-              <div class="content">
-                <h4>Package 6</h4>
-                <p>Escape to paradise with crystal-clear waters, overwater bungalows, and unparalleled luxury.</p>
-                <div class="features">
-                  <span class="feature-tag">Luxury</span>
-                  <span class="feature-tag">Honeymoon</span>
-                </div>
-                <div class="card-footer">
-                  <div class="tours-count">6 Tours Available</div>
-                  <a href="#" class="explore-btn">
-                    Explore <i class="bi bi-arrow-right"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div><!-- End Destination Card -->
+          <?php endforeach; ?>
 
         </div>
 
@@ -647,131 +549,7 @@
 
   </main>
 
-  <footer id="footer" class="footer position-relative dark-background">
-
-    <div class="container">
-      <div class="row gy-5">
-
-        <div class="col-lg-4">
-          <div class="footer-content">
-            <a href="index.html" class="logo d-flex align-items-center mb-4">
-              <span class="sitename">TravelTime</span>
-            </a>
-            <p class="mb-4">Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae. Donec velit neque auctor sit amet aliquam vel ullamcorper sit amet ligula.</p>
-
-            <div class="newsletter-form">
-              <h5>Stay Updated</h5>
-              <form action="forms/newsletter.php" method="post" class="php-email-form">
-                <div class="input-group">
-                  <input type="email" name="email" class="form-control" placeholder="Enter your email" required="">
-                  <button type="submit" class="btn-subscribe">
-                    <i class="bi bi-send"></i>
-                  </button>
-                </div>
-                <div class="loading">Loading</div>
-                <div class="error-message"></div>
-                <div class="sent-message">Thank you for subscribing!</div>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-2 col-6">
-          <div class="footer-links">
-            <h4>Company</h4>
-            <ul>
-              <li><a href="#"><i class="bi bi-chevron-right"></i> About</a></li>
-              <li><a href="#"><i class="bi bi-chevron-right"></i> Careers</a></li>
-              <li><a href="#"><i class="bi bi-chevron-right"></i> Press</a></li>
-              <li><a href="#"><i class="bi bi-chevron-right"></i> Blog</a></li>
-              <li><a href="#"><i class="bi bi-chevron-right"></i> Contact</a></li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="col-lg-2 col-6">
-          <div class="footer-links">
-            <h4>Solutions</h4>
-            <ul>
-              <li><a href="#"><i class="bi bi-chevron-right"></i> Digital Strategy</a></li>
-              <li><a href="#"><i class="bi bi-chevron-right"></i> Cloud Computing</a></li>
-              <li><a href="#"><i class="bi bi-chevron-right"></i> Data Analytics</a></li>
-              <li><a href="#"><i class="bi bi-chevron-right"></i> AI Solutions</a></li>
-              <li><a href="#"><i class="bi bi-chevron-right"></i> Cybersecurity</a></li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="col-lg-4">
-          <div class="footer-contact">
-            <h4>Get in Touch</h4>
-            <div class="contact-item">
-              <div class="contact-icon">
-                <i class="bi bi-geo-alt"></i>
-              </div>
-              <div class="contact-info">
-                <p>2847 Maple Avenue<br>Los Angeles, CA 90210<br>United States</p>
-              </div>
-            </div>
-
-            <div class="contact-item">
-              <div class="contact-icon">
-                <i class="bi bi-telephone"></i>
-              </div>
-              <div class="contact-info">
-                <p>+1 (555) 987-6543</p>
-              </div>
-            </div>
-
-            <div class="contact-item">
-              <div class="contact-icon">
-                <i class="bi bi-envelope"></i>
-              </div>
-              <div class="contact-info">
-                <p>contact@example.com</p>
-              </div>
-            </div>
-
-            <div class="social-links">
-              <a href="#"><i class="bi bi-facebook"></i></a>
-              <a href="#"><i class="bi bi-twitter-x"></i></a>
-              <a href="#"><i class="bi bi-linkedin"></i></a>
-              <a href="#"><i class="bi bi-youtube"></i></a>
-              <a href="#"><i class="bi bi-github"></i></a>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="footer-bottom">
-      <div class="container">
-        <div class="row align-items-center">
-          <div class="col-lg-6">
-            <div class="copyright">
-              <p>© <span>Copyright</span> <strong class="px-1 sitename">Pulau Perhentian Travel Package</strong> <span>All Rights Reserved</span></p>
-            </div>
-          </div>
-          <div class="col-lg-6">
-            <div class="footer-bottom-links">
-              <a href="#">Privacy Policy</a>
-              <a href="#">Terms of Service</a>
-              <a href="#">Cookie Policy</a>
-            </div>
-            <div class="credits">
-              <!-- All the links in the footer should remain intact. -->
-              <!-- You can delete the links only if you've purchased the pro version. -->
-              <!-- Licensing information: https://bootstrapmade.com/license/ -->
-              <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
-              <!-- Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> -->
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </footer>
+  <?php $this->load->view('footer'); ?>
 
   <!-- Scroll Top -->
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

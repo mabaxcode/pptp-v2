@@ -305,6 +305,12 @@
                   <p>Category</p>
                 </a>
               </li>
+               <li class="nav-item <?php if ($page_name == 'office/manage_duration') echo 'active'; ?>">
+                <a href="<?php echo base_url('office/manage_duration'); ?>">
+                  <i class="fas fa-file"></i>
+                  <p>Duration Package</p>
+                </a>
+              </li>
             </ul>
           </div>
         </div>

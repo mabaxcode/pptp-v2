@@ -109,7 +109,37 @@ class Office extends CI_Controller {
 		$categories = $this->input->post('categories'); // This will be an array
 		$cover_photo = $_FILES['cover_photo'];
 
+		$itinerary_titles = $this->input->post('itinerary_title');
+		$itinerary_descriptions = $this->input->post('itinerary_description');
+
+		// echo '<pre>';
+		// print_r($_POST);
+		// print_r($_FILES);
+		// echo '</pre>';
+		// exit;
+
+		// check photo upload
+		if (empty($cover_photo['name'])) {
+			$this->session->set_flashdata('error', 'Cover photo is required.');
+			redirect('office/add_package');
+		}
+
+		// itineraries must be added at least one
+		$itineraries = $this->input->post('itinerary_title'); // This will be an array
+
+		if (empty($itineraries)) {
+			$this->session->set_flashdata('error', 'At least one itinerary must be added.');
+			redirect('office/add_package');
+		}
+
 		
+
+		// package items at least one
+		$package_items = $this->input->post('package_item'); // This will be an array
+		// if (empty($package_items)) {
+		// 	$this->session->set_flashdata('error', 'At least one package item must be added.');
+		// 	redirect('office/add_package');
+		// }
 
 		// print_r($categories);exit;
 
@@ -130,12 +160,43 @@ class Office extends CI_Controller {
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules('package_name', 'Package Name', 'required');
 		$this->form_validation->set_rules('description', 'Description', 'required');
+		$this->form_validation->set_rules('package_item[]', 'Package Item', 'required|trim');
+
 		if ($this->form_validation->run() == FALSE) {
 			$this->session->set_flashdata('error', validation_errors());
 			redirect('office/add_package');
 
 		}else{
 			$id = $this->add_package_to_db($data);
+
+			// add itineraries
+
+			
+			$batch_data = [];
+
+			foreach ($itinerary_titles as $i => $title) {
+				$batch_data[] = [
+					'package_id'  => $id,
+					'seq' 	   => $i + 1,
+					'title'       => $title,
+					'description' => $itinerary_descriptions[$i]
+				];
+			}
+
+			$this->db->insert_batch('itineraries', $batch_data);
+
+			// add package items
+			if (!empty($package_items)) {
+				$batch_items = [];
+				foreach ($package_items as $item) {
+					$batch_items[] = [
+						'package_id' => $id,
+						'item'       => $item
+					];
+				}
+				$this->db->insert_batch('package_items', $batch_items);
+			}
+			
 
 			// upload cover photo
 			if (!empty($cover_photo['name'])) {
@@ -160,6 +221,66 @@ class Office extends CI_Controller {
 					redirect('office/add_package');
 				}
 			}
+
+			// upload photo gallery
+			$photo_gallery = $_FILES['photo_gallery'];
+
+			// Debug only (optional)
+			// echo "<pre>"; print_r($photo_gallery); echo "</pre>"; 
+
+			$gallery_count = count($photo_gallery['name']);
+
+			// echo "Gallery Count: " . $gallery_count . "<br>";
+
+			// exit;
+
+			if ($gallery_count > 0) {
+				// Load upload library once
+				$this->load->library('upload');
+
+				for ($i = 0; $i < $gallery_count; $i++) {
+					if (!empty($photo_gallery['name'][$i])) {
+						
+							// echo "Uploading gallery photo: " . $photo_gallery['name'][$i] . "<br>";
+							$ext = pathinfo($photo_gallery['name'][$i], PATHINFO_EXTENSION);
+							$hashed_name = md5($photo_gallery['name'][$i] . time());
+							$gallery_photo_name = 'package_' . $id . '_gallery_' . $hashed_name . '.' . $ext;
+
+							// Map file data
+							$_FILES['gallery_photo']['name'] = $photo_gallery['name'][$i];
+							$_FILES['gallery_photo']['type'] = $photo_gallery['type'][$i];
+							$_FILES['gallery_photo']['tmp_name'] = $photo_gallery['tmp_name'][$i];
+							$_FILES['gallery_photo']['error'] = $photo_gallery['error'][$i];
+							$_FILES['gallery_photo']['size'] = $photo_gallery['size'][$i];
+
+							// Upload config
+							$config['upload_path']   = './uploads/packages/gallery/';
+							$config['allowed_types'] = 'jpg|jpeg|png|gif';
+							$config['file_name']     = $gallery_photo_name;
+							$config['overwrite']     = false;
+
+						
+							$this->upload->initialize($config);
+
+							if ($this->upload->do_upload('gallery_photo')) {
+								$gallery_data = $this->upload->data();
+								$gallery_photo_path = 'uploads/packages/gallery/' . $gallery_data['file_name'];
+
+								// Save record into DB
+								$this->db->insert('package_galleries', [
+									'package_id' => $id,
+									'image'      => $gallery_photo_path,
+									'created_dt' => date('Y-m-d H:i:s')
+								]);
+							} else {
+								// Optional: display error if upload fails
+								log_message('error', 'Upload failed: ' . $this->upload->display_errors());
+							}
+					}
+				}
+			}
+			// end upload photo gallery
+			// exit;
 			
 			$this->session->set_flashdata('success', 'Package has been added successfully.');
 			redirect('office/add_package');
@@ -292,6 +413,81 @@ class Office extends CI_Controller {
 		$response = array(
 			'status' => 'success',
 			'message' => 'Category has been updated successfully.'
+		);
+		echo json_encode($response);
+	}
+
+	function save_gallery()
+	{   
+		$this->load->helper('form');
+
+		$galery_photo = $_FILES['galery_photo'];
+
+		// upload gallery photo
+		if (!empty($galery_photo['name'])) {
+			$ext = pathinfo($galery_photo['name'], PATHINFO_EXTENSION);
+			// hash the file name to avoid conflicts
+			$hashed_name = md5($galery_photo['name'] . time());
+			$galery_photo_name = 'gallery_' . $hashed_name . '.' . $ext;
+			$config['upload_path'] = './uploads/gallery/';
+			$config['allowed_types'] = 'jpg|jpeg|png|gif';
+			$config['file_name'] = $galery_photo_name;
+			$this->load->library('upload', $config);
+			if ($this->upload->do_upload('galery_photo')) {
+				// Save the gallery record with the photo path
+				$gallery_data = $this->upload->data();
+				$galery_photo_path = 'uploads/gallery/' . $gallery_data['file_name'];
+				$this->db->insert('galleries', array('image' => $galery_photo_path, 'created_dt' => date('Y-m-d H:i:s')));
+				
+				$this->session->set_flashdata('success', 'Photo has been added successfully.');
+				redirect('office/manage_gallery');
+			} else {
+				// Upload failed
+				$this->session->set_flashdata('error', $this->upload->display_errors());
+				redirect('office/manage_gallery');
+			}
+		} else {
+			$this->session->set_flashdata('error', 'Please select a photo to upload.');
+			redirect('office/manage_gallery');
+		}
+		
+	}
+
+	function delete_gallery($id) {
+		$this->db->where('id', $id);
+		$this->db->delete('galleries');
+		$this->session->set_flashdata('success', 'Gallery photo has been deleted successfully.');
+		redirect('office/manage_gallery');
+	}
+
+	function manage_duration() {   
+		$data['page_title'] = 'Manage Duration Package';
+		$data['page_name'] = 'office/manage_duration';
+
+		$data['durations'] = $this->db->get('durations')->result_array();
+
+		$this->load->view('office/main', $data);
+	}
+
+	function save_duration()
+	{   
+		$duration_name = $this->input->post('duration_name');
+		// Here you would typically save the duration to the database
+		// For demonstration, we'll just return a success message
+		if (empty($duration_name)) {
+			$response = array(
+				'status' => 'error',
+				'message' => 'Duration name cannot be empty.'
+			);
+			echo json_encode($response);
+			return;
+		}
+		// Simulate saving to database...
+		$save = $this->db->insert('durations', array('name' => $duration_name));
+
+		$response = array(
+			'status' => 'success',
+			'message' => 'Duration has been added successfully.'
 		);
 		echo json_encode($response);
 	}

@@ -82,6 +82,60 @@
           }
         });
       });
+
+      $(document).on('click', '.add-duration', function(e) {
+        e.preventDefault;
+        // alert ('clicked');
+        var formData = $('#form-add-duration').serialize();
+        $.ajax({
+          type: "POST",
+          url: base_url + 'office/save_duration',
+          data: formData,
+          async: true,
+          dataType: 'json',
+          success: function(data) {
+            console.log(data);
+
+            if (data.status === 'error') {
+              $.notify({
+                icon: 'icon-close',
+                title: 'Error',
+                message: data.message,
+              },{
+                type: 'danger',
+                placement: {
+                  from: "top",
+                  align: "right"
+                },
+                time: 1000,
+              });
+              return;
+            }
+            $("#addRowModal").modal('hide');
+            $.notify({
+              icon: 'icon-bell',
+              title: 'Notification',
+              message: data.message,
+            },{
+              type: 'secondary',
+              placement: {
+                from: "top",
+                align: "right"
+              },
+              time: 1000,
+            });
+            // set timer to reload page after 1 second
+            setTimeout(function() {
+              
+              location.reload();
+            }, 1000);
+            
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            console.log(textStatus, errorThrown);
+          }
+        });
+      });
     </script>
   </body>
 </html>

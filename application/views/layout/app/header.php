@@ -46,7 +46,7 @@
     position: relative;
     width: 100%;
     max-width: 1200px;
-    height: 400px;
+    height: 210px;
     border: 2px dashed #ccc;
     border-radius: 12px;
     background-size: cover;
@@ -90,5 +90,40 @@
     height: 100%;
     color: #888;
     font-weight: 500;
+  }
+
+  /* galery */
+  .cover-upload-galery:hover {
+    border-color: #007bff;
+  }
+
+  .cover-upload-galery input[type="file"] {
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+
+  .cover-placeholder-galery {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #888;
+    font-weight: 500;
+  }
+  .cover-upload-galery {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    height: 300px;
+    border: 2px dashed #ccc;
+    border-radius: 12px;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
   }
   </style>
