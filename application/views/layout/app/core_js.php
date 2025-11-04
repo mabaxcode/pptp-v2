@@ -159,8 +159,180 @@
           time: 1000,
         });
     <?php } ?>
+      $(document).on('click', '.edit-package-item-btn', function(e) {
+        // show modal
+        e.preventDefault();
+        var itemId = $(this).data('id');
+        // alert(itemId);
+        // load form using ajax
+        $.ajax({
+          type: "GET",
+          url: base_url + 'office/get_package_item/' + itemId,
+          async: true,
+          dataType: 'json',
+          success: function(data) {
+            console.log(data);
 
+              $('#edit_package_item_id').val(data.id);
+              $('#edit_package_item_item').val(data.item);
 
+              $('#editPackageItemModal').modal('show');
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            console.log(textStatus, errorThrown);
+          }
+        });
+    });
 
+    $(document).on('click', '.edit-itinerary-btn', function(e) {
+        // show modal
+        e.preventDefault();
+        var itineraryId = $(this).data('id');
+        // alert(itineraryId);
+        // load form using ajax
+        $.ajax({
+          type: "GET",
+          url: base_url + 'office/get_itinerary/' + itineraryId,
+          async: true,
+          dataType: 'json',
+          success: function(data) {
+            console.log(data);
+
+              $('#edit_itinerary_id').val(data.id);
+              $('#edit_itinerary_seq').val(data.seq);
+              $('#edit_itinerary_title').val(data.title);
+              $('#edit_itinerary_description').val(data.description);
+
+              $('#editItineraryModal').modal('show');
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            console.log(textStatus, errorThrown);
+          }
+        });
+    });
+
+    $(document).on('click', '.update-package-item', function(e) {
+        e.preventDefault();
+        var formData = $('#form-edit-package-item').serialize();
+        $.ajax({
+          type: "POST",
+          url: base_url + 'office/update_package_item',
+          data: formData,
+          async: true,
+          dataType: 'json',
+          success: function(data) {
+            console.log(data);
+            
+            $("#editPackageItemModal").modal('hide');
+            location.reload();
+            
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            console.log(textStatus, errorThrown);
+          }
+        });
+      });
+
+    $(document).on('click', '.save-itinerary-changes', function(e) {
+        e.preventDefault();
+        var formData = $('#form-edit-itinerary').serialize();
+        $.ajax({
+          type: "POST",
+          url: base_url + 'office/update_itinerary',
+          data: formData,
+          async: true,
+          dataType: 'json',
+          success: function(data) {
+            console.log(data);
+
+          //   if (data.status === 'error') {
+          //     $.notify({
+          //       icon: 'icon-close',
+          //       title: 'Error',
+          //       message: data.message,
+          //     },{
+          //       type: 'danger',
+          //       placement: {
+          //         from: "top",
+          //         align: "right"
+          //       },
+          //       time: 1000,
+          //     });
+          //     return;
+          //   }else {
+          //     $.notify({
+          //       icon: 'icon-bell',
+          //       title: 'Success !',
+          //       message: data.message,
+          //   },{
+          //     type: 'secondary',
+          //     placement: {
+          //       from: "top",
+          //       align: "right"
+          //     },
+          //     time: 1000,
+          //   });
+          // }
+            
+            $("#editItineraryModal").modal('hide');
+            // reload page after 1 second
+            // setTimeout(function() {
+            //   location.reload();
+            // }, 1000);
+            location.reload();
+            // window.location.href = base_url + 'office/edit_package/' + data.package_id;
+            
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            console.log(textStatus, errorThrown);
+          }
+        });
+      });
+
+      $(document).on('click', '.add-itinerary-btn', function(e) {
+        e.preventDefault;
+        // alert ('clicked');
+        var formData = $('#form-add-itinerary').serialize();
+        $.ajax({
+          type: "POST",
+          url: base_url + 'office/save_itinerary',
+          data: formData,
+          async: true,
+          dataType: 'json',
+          success: function(data) {
+            console.log(data);
+
+            $("#addItineraryModal").modal('hide');
+            location.reload();
+            
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            console.log(textStatus, errorThrown);
+          }
+        });
+      });
+
+      $(document).on('click', '.add-package-item-btn', function(e) {
+        e.preventDefault;
+        // alert ('clicked');
+        var formData = $('#form-add-package-item').serialize();
+        $.ajax({
+          type: "POST",
+          url: base_url + 'office/save_package_item',
+          data: formData,
+          async: true,
+          dataType: 'json',
+          success: function(data) {
+            console.log(data);
+
+            $("#addPackageItemModal").modal('hide');
+            location.reload();
+            
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            console.log(textStatus, errorThrown);
+          }
+        });
+      });
 
     </script>

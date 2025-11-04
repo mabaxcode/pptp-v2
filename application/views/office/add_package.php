@@ -127,7 +127,9 @@
                           <label for="email2">Duration </label> 
                           <select name="duration" id="duration" class="form-control">
                             <option value="">-- Select Duration --</option>
-                            <option value="3 Days 2 Nights">3 Days 2 Nights</option>
+                            <?php foreach ($durations as $duration) { ?>
+                              <option value="<?php echo $duration['name']; ?>"><?php echo $duration['name']; ?></option>
+                            <?php } ?>
                           </select>
                         </div>
 
@@ -403,6 +405,12 @@
                 errorMessages.push("At least one Package Item is required.");
               }
 
+              // alert ('Submitting form with ' + allFiles.length + ' files.');
+              hiddenUploads.innerHTML = ""; // clear any previous
+              if (allFiles.length === 0) {
+                errorMessages.push("At least one Photo Gallery image must be uploaded.");
+              }
+
               if (errorMessages.length > 0) {
                 formError.innerHTML = errorMessages.join("<br>");
                 formError.hidden = false;
@@ -411,9 +419,7 @@
                 return;
               }
 
-              // alert ('Submitting form with ' + allFiles.length + ' files.');
-              hiddenUploads.innerHTML = ""; // clear any previous
-              if (allFiles.length === 0) return; // nothing to do
+              
 
               // Use DataTransfer API to reattach files
               const dt = new DataTransfer();

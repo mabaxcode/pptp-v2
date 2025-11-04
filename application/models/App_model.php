@@ -41,4 +41,46 @@ class App_model extends CI_Model {
         return $query->row_array();
     }
 
+    function get_package_gallery($package_id)
+    {
+        $this->db->where('package_id', $package_id);
+        $query = $this->db->get('package_galleries');
+        return $query->result_array();
+    }
+
+    function get_package_itinerary($package_id)
+    {
+        $this->db->where('package_id', $package_id);
+        // order by seq
+        $this->db->order_by('seq', 'ASC');
+        $query = $this->db->get('itineraries');
+        return $query->result_array();
+    }
+
+    function get_package_items($package_id)
+    {
+        $this->db->where('package_id', $package_id);
+        $query = $this->db->get('package_items');
+        return $query->result_array();
+    }
+
+    function get_durations()
+    {
+        $query = $this->db->get('durations');
+        return $query->result_array();
+    }
+
+    function get_user_details($user_id)
+    {
+        $this->db->where('id', $user_id);
+        $query = $this->db->get('users');
+        return $query->row_array();
+    }   
+
+    function get_gallery()
+    {
+        $query = $this->db->get('galleries');
+        return $query->result_array();
+    }
+
 }

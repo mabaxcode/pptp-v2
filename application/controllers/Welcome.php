@@ -26,6 +26,19 @@ class Welcome extends CI_Controller {
 	public function package_details($id)
 	{
 		$data['package'] = $this->app_model->get_package_details($id);
+
+		$data['gallery'] = $this->app_model->get_package_gallery($id);
+		$data['itinerarys'] = $this->app_model->get_package_itinerary($id);
+		$data['package_items'] = $this->app_model->get_package_items($id);
+
+		
+
 		$this->load->view('package_details', $data);
+	}
+
+	function gallery()
+	{
+		$data['gallery'] = $this->app_model->get_gallery();
+		$this->load->view('gallery_page', $data);
 	}
 }

@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Tours - TravelTime Bootstrap Template</title>
+  <title>Booking - TravelTime Bootstrap Template</title>
   <meta name="description" content="">
   <meta name="keywords" content="">
 
@@ -35,7 +35,7 @@
   ======================================================== -->
 </head>
 
-<body class="tours-page">
+<body class="booking-page">
 
   <?php $this->load->view('header'); ?>
 
@@ -44,69 +44,117 @@
     <!-- Page Title -->
     <div class="page-title dark-background" style="background-image: url(<?php echo base_url(); ?>assets2/img/travel/showcase-11.webp);">
       <div class="container position-relative">
-        <h1>Package</h1>
-        <p>Explore breathtaking destinations and create unforgettable memories with our expertly crafted package</p>
+        <h1>Profile Details</h1>
+        <!-- <p>Esse dolorum voluptatum ullam est sint nemo et est ipsa porro placeat quibusdam quia assumenda numquam molestias.</p> -->
         <nav class="breadcrumbs">
           <ol>
             <li><a href="index.html">Home</a></li>
-            <li class="current">Tours</li>
+            <li class="current">Profile</li>
           </ol>
         </nav>
       </div>
     </div><!-- End Page Title -->
 
-    <!-- Travel Tours Section -->
-    <section id="travel-tours" class="travel-tours section">
+    <!-- Travel Booking Section -->
+    <section id="travel-booking" class="travel-booking section">
 
       <div class="container">
 
-       
+        <div class="row">
+          <div class="col-lg-8">
+            <div class="booking-form">
 
+              <form action="<?php echo base_url('user/update_profile'); ?>" method="post">
 
-        <!-- Tours Grid -->
-        <div class="row mb-5">
-          <div class="col-12">
-            <div class="tours-header">
-              <h3 class="section-subtitle">All Packages</h3>
               
-            </div>
 
-            <div class="tours-grid">
-
-              <?php foreach($packages as $package){ ?>
-              <a href="<?php echo base_url('welcome/package_details/'.$package['id']); ?>" class="tour-link">
-                <div class="tour-item">
-                  <div class="tour-image">
-                    <img src="<?php echo base_url($package['cover_photo']); ?>" alt="Norwegian Fjords" class="img-fluid">
-                    <?php if($package['tag']): ?><div class="tour-availability"><?php echo $package['tag']; ?></div><?php endif; ?>
+                <!-- Step 2: Traveler Information -->
+                <div class="booking-step" id="step-2">
+                  <div class="step-header">
+                    <h3>Update Profile</h3>
+                    <p>All fields are required</p>
                   </div>
-                  <div class="tour-details">
-                    <h4><?php echo $package['package_name']; ?></h4>
-                    <p><?php $desc = $package['description'];
-    echo strlen($desc) > 100 ? substr($desc, 0, 100) . '...' : $desc; ?></p>
-                    <div class="tour-highlights">
-                      <span><i class="bi bi-clock"></i> <?php echo $package['duration']; ?></span>
-                      <!-- <span><i class="bi bi-people"></i> Small Group</span> -->
-                      <!-- <span><i class="bi bi-star-fill"></i> 4.8</span> -->
+
+                  <!-- success message -->
+                <?php if ($this->session->flashdata('success')): ?>
+                    <div class="alert alert-success">
+                        <?php echo $this->session->flashdata('success'); ?>
                     </div>
-                    <div class="tour-pricing">
-                      <span class="per">From</span>
-                      <span class="price"><?php echo $package['price']; ?></span>
+                <?php endif; ?>
+
+                  <div class="step-content">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="first-name">Name</label>
+                          <input type="text" name="name" id="first-name" class="form-control" required="" value="<?php echo $user['name']; ?>">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="email">Email Address</label>
+                          <input type="email" name="email" id="email" class="form-control" required="" value="<?php echo $user['email']; ?>">
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </a>
-              <?php } ?>
+
+                
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="bi bi-check-circle"></i>
+                    Update Profile
+                    </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="col-lg-4">
+            <div class="booking-summary">
+              <div class="summary-header">
+                <h4>Profile Summary</h4>
+              </div>
+
+              <div class="summary-content">
+                
+
+                <div class="booking-details">
+                  <div class="detail-row">
+                    <span>Name:</span>
+                    <span><?php echo $user['name']; ?></span>
+                  </div>
+                  <div class="detail-row">
+                    <span>Email:</span>
+                    <span><?php echo $user['email']; ?></span>
+                  </div>
+                  <!-- <div class="detail-row">
+                    <span>Travelers:</span>
+                    <span>2 Adults</span>
+                  </div> -->
+                </div>
+
+                
+
+                <div class="payment-security">
+                  <div class="security-badges">
+                    <i class="bi bi-shield-check"></i>
+                    <span>Verified Account</span>
+                  </div>
+                  
+                </div>
+              </div>
+
+              
             </div>
           </div>
         </div>
 
-      
-
-
       </div>
 
-    </section><!-- /Travel Tours Section -->
+    </section><!-- /Travel Booking Section -->
 
   </main>
 

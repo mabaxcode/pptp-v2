@@ -2,13 +2,15 @@
         <div class="sidebar-logo">
           <!-- Logo Header -->
           <div class="logo-header" data-background-color="dark">
-            <a href="index.html" class="logo">
-              <img
-                src="<?php echo base_url(); ?>assets/img/kaiadmin/logo_light.svg"
+            <a href="<?php echo base_url(); ?>" class="logo">
+              
+              <!-- <img
+                src="<?php echo base_url(); ?>assets/img/kaiadmin/icon.png"
                 alt="navbar brand"
                 class="navbar-brand"
-                height="20"
-              />
+                height="30"
+              /> -->
+              <font style="color: #fff; font-size: 20px; font-weight: bold;">PPTP Admin</font>
             </a>
             <div class="nav-toggle">
               <button class="btn btn-toggle toggle-sidebar">
@@ -27,6 +29,13 @@
         <div class="sidebar-wrapper scrollbar scrollbar-inner">
           <div class="sidebar-content">
             <ul class="nav nav-secondary">
+              <li class="nav-item">
+                <a href="<?php echo base_url('office'); ?>">
+                  <i class="fas fa-home"></i>
+                  <p>Dashboard</p>
+                </a>
+              </li>
+              <?php /*
               <li class="nav-item active">
                 <a
                   data-bs-toggle="collapse"
@@ -48,6 +57,8 @@
                   </ul>
                 </div>
               </li>
+              */?>
+              <?php /*
               <li class="nav-section">
                 <span class="sidebar-mini-icon">
                   <i class="fa fa-ellipsis-h"></i>
@@ -275,6 +286,7 @@
                   </ul>
                 </div>
               </li>
+              */?>
               <li class="nav-section">
                 <span class="sidebar-mini-icon">
                   <i class="fa fa-ellipsis-h"></i>

@@ -26,6 +26,8 @@
   <!-- Main CSS File -->
   <link href="<?php echo base_url(); ?>assets2/css/main.css" rel="stylesheet">
 
+  <link rel="stylesheet" href="<?php echo base_url(); ?>node_modules/izitoast/dist/css/iziToast.min.css">
+
   <!-- =======================================================
   * Template Name: TravelTime
   * Template URL: https://bootstrapmade.com/traveltime-bootstrap-travel-template/
@@ -37,62 +39,7 @@
 
 <body class="index-page">
 
-  <header id="header" class="header d-flex align-items-center fixed-top">
-    <div class="container position-relative d-flex align-items-center justify-content-between">
-
-      <a href="index.html" class="logo d-flex align-items-center me-auto me-xl-0">
-        <!-- Uncomment the line below if you also wish to use an image logo -->
-        <!-- <img src="<?php echo base_url(); ?>assets2/img/logo.webp" alt=""> -->
-        <h1 class="sitename">Pulau Perhentian Travel Package</h1>
-      </a>
-
-      <nav id="navmenu" class="navmenu">
-        <ul>
-          <li><a href="#" class="active">Home</a></li>
-          <li><a href="#">About</a></li>
-          <!-- <li><a href="destinations.html">Destinations</a></li> -->
-          <li><a href="<?php echo base_url('welcome/package'); ?>">Package</a></li>
-          <li><a href="#">Gallery</a></li>
-          <!-- <li><a href="blog.html">Blog</a></li> -->
-          <!-- <li class="dropdown"><a href="#"><span>More Pages</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-            <ul>
-              <li><a href="destination-details.html">Destination Details</a></li>
-              <li><a href="tour-details.html">Tour Details</a></li>
-              <li><a href="booking.html">Booking</a></li>
-              <li><a href="testimonials">Testimonials</a></li>
-              <li><a href="faq.html">Frequently Asked Questions</a></li>
-              <li><a href="blog-details.html">Blog Details</a></li>
-              <li><a href="terms.html">Terms</a></li>
-              <li><a href="privacy.html">Privacy</a></li>
-              <li><a href="404.html">404</a></li>
-            </ul>
-          </li> -->
-          <!-- <li class="dropdown"><a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-            <ul>
-              <li><a href="#">Dropdown 1</a></li>
-              <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                <ul>
-                  <li><a href="#">Deep Dropdown 1</a></li>
-                  <li><a href="#">Deep Dropdown 2</a></li>
-                  <li><a href="#">Deep Dropdown 3</a></li>
-                  <li><a href="#">Deep Dropdown 4</a></li>
-                  <li><a href="#">Deep Dropdown 5</a></li>
-                </ul>
-              </li>
-              <li><a href="#">Dropdown 2</a></li>
-              <li><a href="#">Dropdown 3</a></li>
-              <li><a href="#">Dropdown 4</a></li>
-            </ul>
-          </li> -->
-          <li><a href="#">Contact</a></li>
-        </ul>
-        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-      </nav>
-
-      <a class="btn-getstarted" href="index.html#about">Login</a>
-
-    </div>
-  </header>
+  <?php $this->load->view('header'); ?>
 
   <main class="main">
 
@@ -102,7 +49,7 @@
       <div class="container">
 
         <div class="row align-items-center">
-          <div class="col-lg-6">
+          <div class="col-lg-12">
             <div class="content">
               <h1>Discover Pulau Perhentian with Us</h1>
               <p class="lead">Explore breathtaking destinations and create unforgettable memories with our expertly crafted package.</p>
@@ -112,6 +59,7 @@
               </div>
             </div>
           </div>
+          <?php /*
           <div class="col-lg-6 mt-5 mt-lg-0">
             <div class="booking-form">
               <form action="" method="post">
@@ -143,6 +91,7 @@
               </form>
             </div>
           </div>
+          */?>
         </div>
 
       </div>
@@ -568,6 +517,19 @@
 
   <!-- Main JS File -->
   <script src="<?php echo base_url(); ?>assets2/js/main.js"></script>
+
+  <script src="<?php echo base_url(); ?>node_modules/izitoast/dist/js/iziToast.min.js" type="text/javascript"></script>
+
+  <script>
+    var success_login = <?php echo json_encode($this->session->flashdata('success_login')); ?>;
+    if(success_login){
+      iziToast.success({
+          title: 'Welcome !',
+          message: 'Login successfully.',
+          position: 'topRight'
+      });
+    }
+  </script>
 
 </body>
 

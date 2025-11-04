@@ -37,62 +37,7 @@
 
 <body class="tour-details-page">
 
-   <header id="header" class="header d-flex align-items-center fixed-top">
-    <div class="container position-relative d-flex align-items-center justify-content-between">
-
-      <a href="index.html" class="logo d-flex align-items-center me-auto me-xl-0">
-        <!-- Uncomment the line below if you also wish to use an image logo -->
-        <!-- <img src="<?php echo base_url(); ?><?php echo base_url(); ?>assets22/img/logo.webp" alt=""> -->
-        <h1 class="sitename">Pulau Perhentian Travel Package</h1>
-      </a>
-
-      <nav id="navmenu" class="navmenu">
-        <ul>
-          <li><a href="<?php echo base_url(); ?>">Home</a></li>
-          <li><a href="#">About</a></li>
-          <!-- <li><a href="destinations.html">Destinations</a></li> -->
-          <li><a href="<?php echo base_url('welcome/package'); ?>">Package</a></li>
-          <li><a href="#">Gallery</a></li>
-          <!-- <li><a href="blog.html">Blog</a></li> -->
-          <!-- <li class="dropdown"><a href="#"><span>More Pages</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-            <ul>
-              <li><a href="destination-details.html">Destination Details</a></li>
-              <li><a href="tour-details.html">Tour Details</a></li>
-              <li><a href="booking.html">Booking</a></li>
-              <li><a href="testimonials">Testimonials</a></li>
-              <li><a href="faq.html">Frequently Asked Questions</a></li>
-              <li><a href="blog-details.html">Blog Details</a></li>
-              <li><a href="terms.html">Terms</a></li>
-              <li><a href="privacy.html">Privacy</a></li>
-              <li><a href="404.html">404</a></li>
-            </ul>
-          </li> -->
-          <!-- <li class="dropdown"><a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-            <ul>
-              <li><a href="#">Dropdown 1</a></li>
-              <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                <ul>
-                  <li><a href="#">Deep Dropdown 1</a></li>
-                  <li><a href="#">Deep Dropdown 2</a></li>
-                  <li><a href="#">Deep Dropdown 3</a></li>
-                  <li><a href="#">Deep Dropdown 4</a></li>
-                  <li><a href="#">Deep Dropdown 5</a></li>
-                </ul>
-              </li>
-              <li><a href="#">Dropdown 2</a></li>
-              <li><a href="#">Dropdown 3</a></li>
-              <li><a href="#">Dropdown 4</a></li>
-            </ul>
-          </li> -->
-          <li><a href="#">Contact</a></li>
-        </ul>
-        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-      </nav>
-
-      <a class="btn-getstarted" href="index.html#about">Login</a>
-
-    </div>
-  </header>
+   <?php $this->load->view('header'); ?>
 
   <main class="main">
 
@@ -178,7 +123,7 @@
                   <span class="price-amount">RM<?php echo number_format($package['price'], 2); ?></span>
                 </div>
                 <!-- <p class="price-description">per person, twin accommodation</p> -->
-                <a href="#booking" class="btn-reserve">Book Now</a>
+                <a href="<?php echo base_url('booking/application/'.$package['id']); ?>" class="btn-reserve">Book Now</a>
                 <!-- <div class="booking-notes">
                   <span><i class="bi bi-shield-check"></i>Free cancellation up to 48h</span>
                 </div> -->
@@ -190,25 +135,27 @@
         <!-- Journey Timeline -->
         <div class="journey-timeline">
           <h2>Itinerary</h2>
-
+          
+          <?php foreach ($itinerarys as $itinerary) { ?>
           <div class="timeline-wrapper">
             <div class="timeline-item">
               <div class="timeline-marker">
-                <span class="day-number">01</span>
+                <span class="day-number"><?php echo $itinerary['seq']; ?></span>
               </div>
               <div class="timeline-content">
                 <div class="day-header">
-                  <h3>Roman Grandeur</h3>
-                  <span class="location">Rome</span>
+                  <h3><?php echo $itinerary['title']; ?></h3>
+                  <?php /* <span class="location"><?php echo $itinerary['location']; ?></span> */ ?>
                 </div>
-                <p>Arrival at Rome Fiumicino Airport with private transfer to your centrally located boutique hotel. Evening aperitivo walking tour through Trastevere, discovering hidden local gems and authentic Roman cuisine at a family-owned trattoria.</p>
-                <div class="day-features">
+                <p><?php echo $itinerary['description']; ?></p>
+                <!-- <div class="day-features">
                   <span class="feature-tag">Hotel Del Greco</span>
                   <span class="feature-tag">Welcome Dinner</span>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
+            <?php } ?>
         </div>
 
         <!-- Inclusions Overview -->
@@ -218,30 +165,12 @@
               <div class="included-section">
                 <h3>Package Includes</h3>
                 <div class="inclusion-list">
+                  <?php foreach ($package_items as $item) { ?>
                   <div class="inclusion-item">
                     <i class="bi bi-check-circle-fill"></i>
-                    <span>9 nights boutique hotel accommodation</span>
+                    <span><?php echo $item['item']; ?></span>
                   </div>
-                  <div class="inclusion-item">
-                    <i class="bi bi-check-circle-fill"></i>
-                    <span>Daily breakfast and 4 specialty dinners</span>
-                  </div>
-                  <div class="inclusion-item">
-                    <i class="bi bi-check-circle-fill"></i>
-                    <span>Private transfers and high-speed rail</span>
-                  </div>
-                  <div class="inclusion-item">
-                    <i class="bi bi-check-circle-fill"></i>
-                    <span>Expert local guides and art historians</span>
-                  </div>
-                  <div class="inclusion-item">
-                    <i class="bi bi-check-circle-fill"></i>
-                    <span>Skip-the-line museum entries</span>
-                  </div>
-                  <div class="inclusion-item">
-                    <i class="bi bi-check-circle-fill"></i>
-                    <span>Curated cultural experiences</span>
-                  </div>
+                  <?php } ?>
                 </div>
               </div>
             </div>
@@ -254,36 +183,22 @@
         <div class="visual-gallery">
           <h2>Photo Gallery</h2>
           <div class="gallery-grid">
-            <div class="gallery-piece large">
-              <a href="<?php echo base_url(); ?>assets2/img/travel/destination-4.webp" class="glightbox">
-                <img src="<?php echo base_url(); ?>assets2/img/travel/destination-4.webp" alt="Italian Countryside" class="img-fluid" loading="lazy">
+            <?php $no = 1; foreach ($gallery as $image) { ?>
+              <?php 
+                // determine image size class based on position
+                if ($no == 1) {
+                  $image_size = 'large';
+                } else{
+                  $image_size = '';
+                }
+                $no++;
+              ?>
+            <div class="gallery-piece <?php echo $image_size; ?>">
+              <a href="<?php echo base_url($image['image']); ?>" class="glightbox">
+                <img src="<?php echo base_url($image['image']); ?>" alt="Italian Countryside" class="img-fluid" loading="lazy">
               </a>
             </div>
-            <div class="gallery-piece">
-              <a href="<?php echo base_url(); ?>assets2/img/travel/destination-5.webp" class="glightbox">
-                <img src="<?php echo base_url(); ?>assets2/img/travel/destination-5.webp" alt="Historic Architecture" class="img-fluid" loading="lazy">
-              </a>
-            </div>
-            <div class="gallery-piece">
-              <a href="<?php echo base_url(); ?>assets2/img/travel/destination-6.webp" class="glightbox">
-                <img src="<?php echo base_url(); ?>assets2/img/travel/destination-6.webp" alt="Coastal Views" class="img-fluid" loading="lazy">
-              </a>
-            </div>
-            <div class="gallery-piece">
-              <a href="<?php echo base_url(); ?>assets2/img/travel/tour-8.webp" class="glightbox">
-                <img src="<?php echo base_url(); ?>assets2/img/travel/tour-8.webp" alt="Cultural Experience" class="img-fluid" loading="lazy">
-              </a>
-            </div>
-            <div class="gallery-piece">
-              <a href="<?php echo base_url(); ?>assets2/img/travel/tour-9.webp" class="glightbox">
-                <img src="<?php echo base_url(); ?>assets2/img/travel/tour-9.webp" alt="Local Cuisine" class="img-fluid" loading="lazy">
-              </a>
-            </div>
-            <div class="gallery-piece medium">
-              <a href="<?php echo base_url(); ?>assets2/img/travel/tour-10.webp" class="glightbox">
-                <img src="<?php echo base_url(); ?>assets2/img/travel/tour-10.webp" alt="Scenic Landscapes" class="img-fluid" loading="lazy">
-              </a>
-            </div>
+            <?php } ?>
           </div>
         </div>
 

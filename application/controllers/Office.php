@@ -71,6 +71,7 @@ class Office extends CI_Controller {
 		$data['page_name'] = 'office/add_package';
 
 		$data['categories'] = $this->db->get('categories')->result_array();
+		$data['durations'] = $this->db->get('durations')->result_array();
 
 		$this->load->view('office/main', $data);
 	}
@@ -107,6 +108,8 @@ class Office extends CI_Controller {
 		$description = $this->input->post('description');
 		$tag = $this->input->post('tag');
 		$categories = $this->input->post('categories'); // This will be an array
+		$duration = $this->input->post('duration');
+		$price = $this->input->post('price');
 		$cover_photo = $_FILES['cover_photo'];
 
 		$itinerary_titles = $this->input->post('itinerary_title');
@@ -148,6 +151,8 @@ class Office extends CI_Controller {
 			'description' => $description,
 			'tag' => $tag,
 			'status' => '1',
+			'duration' => $duration,
+			'price' => $price,
 			'categories' => json_encode($categories) // Store as JSON
 		);
 
@@ -301,6 +306,12 @@ class Office extends CI_Controller {
 
 		$data['package'] = $this->db->get_where('packages', array('id' => $id))->row_array();
 		$data['categories'] = $this->db->get('categories')->result_array();
+
+		$data['durations'] = $this->db->get('durations')->result_array();
+
+		$data['itinerarys'] = $this->db->get_where('itineraries', array('package_id' => $id))->result_array();
+
+		$data['package_items'] = $this->db->get_where('package_items', array('package_id' => $id))->result_array();
 
 		$this->load->view('office/main', $data);
 	}
@@ -490,5 +501,183 @@ class Office extends CI_Controller {
 			'message' => 'Duration has been added successfully.'
 		);
 		echo json_encode($response);
+	}
+
+	function get_itinerary($id) {
+		$this->db->where('id', $id);
+		$query = $this->db->get('itineraries');
+		$result = $query->row_array();
+		echo json_encode($result);
+	}
+
+	function update_itinerary()
+	{   
+		$itinerary_id = $this->input->post('itinerary_id');
+		$itinerary_title = $this->input->post('title');
+		$itinerary_description = $this->input->post('description');
+
+		// echo '<pre>';
+		// print_r($_POST);
+		// echo '</pre>';
+		// exit;
+
+		if (empty($itinerary_title)) {
+			$response = array(
+				'status' => 'error',
+				'message' => 'Itinerary title cannot be empty.'
+			);
+			echo json_encode($response);
+			return;
+		}
+
+		// Update itinerary in database
+		$this->db->where('id', $itinerary_id);
+		$this->db->update('itineraries', array(
+			'title' => $itinerary_title,
+			'description' => $itinerary_description
+		));
+
+		$package_id = $this->db->get_where('itineraries', array('id' => $itinerary_id))->row()->package_id;
+		$this->session->set_flashdata('success', 'Itinerary has been updated successfully.');
+		// redirect('office/edit_package/' . $package_id);
+
+		$response = array(
+			'status' => 'success',
+			'message' => 'Itinerary has been updated successfully.',
+			'package_id' => $this->db->get_where('itineraries', array('id' => $itinerary_id))->row()->package_id
+		);
+		echo json_encode($response);
+	}
+
+	function save_itinerary()
+	{   
+		$package_id = $this->input->post('package_id');
+		$title = $this->input->post('title');
+		$description = $this->input->post('description');
+
+		if (empty($title)) {
+			$response = array(
+				'status' => 'error',
+				'message' => 'Itinerary title cannot be empty.'
+			);
+			echo json_encode($response);
+			return;
+		}
+
+		// get the current max seq for the package
+		$this->db->where('package_id', $package_id);
+		$this->db->select_max('seq');
+		$query = $this->db->get('itineraries');
+		$row = $query->row();
+		$max_seq = $row->seq ? $row->seq : 0;
+
+		$data = array(
+			'package_id' => $package_id,
+			'seq' => $max_seq + 1,
+			'title' => $title,
+			'description' => $description
+		);
+
+		$this->db->insert('itineraries', $data);
+
+		$this->session->set_flashdata('success', 'Itinerary has been added successfully.');
+
+		// $response = array(
+		// 	'status' => 'success',
+		// 	'message' => 'Itinerary has been added successfully.'
+		// );
+		// echo json_encode($response);
+	}
+
+	function delete_itinerary($id) {
+		$package_id = $this->db->get_where('itineraries', array('id' => $id))->row()->package_id;
+
+		$this->db->where('id', $id);
+		$this->db->delete('itineraries');
+		$this->session->set_flashdata('success', 'Itinerary has been deleted successfully.');
+		redirect('office/edit_package/' . $package_id);
+	}
+
+	function get_package_item($id) {
+		$this->db->where('id', $id);
+		$query = $this->db->get('package_items');
+		$result = $query->row_array();
+		echo json_encode($result);
+	}
+
+	function update_package_item()
+	{   
+		$package_item_id = $this->input->post('package_item_id');
+		$package_item = $this->input->post('item');
+
+		// echo '<pre>';
+		// print_r($_POST);
+		// echo '</pre>';
+		// exit;
+
+		// if (empty($package_item)) {
+		// 	$response = array(
+		// 		'status' => 'error',
+		// 		'message' => 'Package item cannot be empty.'
+		// 	);
+		// 	echo json_encode($response);
+		// 	return;
+		// }
+
+		// Update package item in database
+		$this->db->where('id', $package_item_id);
+		$this->db->update('package_items', array(
+			'item' => $package_item,
+		));
+
+		// $package_id = $this->db->get_where('package_items', array('id' => $package_item_id))->row()->package_id;
+		$this->session->set_flashdata('success', 'Package item has been updated successfully.');
+		// redirect('office/edit_package/' . $package_id);
+
+		$response = array(
+			'status' => 'success',
+			'message' => 'Package item has been updated successfully.',
+			// 'package_id' => $this->db->get_where('package_items', array('id' => $package_item_id))->row()->package_id
+		);
+		echo json_encode($response);
+	}
+
+	function delete_package_item($id) {
+		$package_id = $this->db->get_where('package_items', array('id' => $id))->row()->package_id;
+
+		$this->db->where('id', $id);
+		$this->db->delete('package_items');
+		$this->session->set_flashdata('success', 'Package item has been deleted successfully.');
+		redirect('office/edit_package/' . $package_id);
+	}
+
+	function save_package_item()
+	{   
+		$package_id = $this->input->post('package_id');
+		$item = $this->input->post('item');
+
+		if (empty($item)) {
+			$response = array(
+				'status' => 'error',
+				'message' => 'Package item cannot be empty.'
+			);
+			echo json_encode($response);
+			return;
+		}
+
+		$data = array(
+			'package_id' => $package_id,
+			'item' => $item
+		);
+
+		$this->db->insert('package_items', $data);
+
+		$this->session->set_flashdata('success', 'Package item has been added successfully.');
+
+		// $response = array(
+		// 	'status' => 'success',
+		// 	'message' => 'Package item has been added successfully.'
+		// );
+		// echo json_encode($response);
 	}
 }
