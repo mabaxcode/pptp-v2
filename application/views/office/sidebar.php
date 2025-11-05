@@ -291,18 +291,18 @@
                 <span class="sidebar-mini-icon">
                   <i class="fa fa-ellipsis-h"></i>
                 </span>
-                <h4 class="text-section">WEBSITE MANAGEMENT</h4>
+                <h4 class="text-section">MANAGEMENT</h4>
               </li>
               <li class="nav-item <?php if ($page_name == 'office/manage_package') echo 'active'; ?>">
                 <a href="<?php echo base_url('office/manage_package'); ?>">
                   <i class="fas fa-file"></i>
-                  <p>Manage Packages</p>
+                  <p>Packages</p>
                 </a>
               </li>
               <li class="nav-item <?php if ($page_name == 'office/manage_gallery') echo 'active'; ?>">
                 <a href="<?php echo base_url('office/manage_gallery'); ?>">
                   <i class="fas fa-file"></i>
-                  <p>Manage Gallery</p>
+                  <p>Image Gallery</p>
                 </a>
               </li>
               <li class="nav-section">

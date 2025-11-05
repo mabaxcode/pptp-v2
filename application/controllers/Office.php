@@ -18,6 +18,19 @@ class Office extends CI_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/userguide3/general/urls.html
 	 */
+
+	public function __construct()
+	{
+		parent::__construct();
+
+        $this->user_id = $this->session->userdata('user_id');
+        if (!$this->user_id) {
+            // not logged in
+            redirect('');
+            return;
+        }
+	}
+
 	public function index()
 	{   
         $data['page_title'] = 'Office Dashboard';

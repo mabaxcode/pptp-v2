@@ -64,7 +64,7 @@
           <div class="col-lg-8">
             <div class="booking-form">
 
-              <form action="<?php echo base_url('booking/preview_booking'); ?>" method="post">
+              <form action="<?php echo base_url('booking/submit_booking'); ?>" method="post">
 
                 <!-- Step 1: Select Tour & Dates -->
                 <div class="booking-step" id="step-1">

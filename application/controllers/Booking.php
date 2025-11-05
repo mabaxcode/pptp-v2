@@ -25,4 +25,26 @@ class Booking extends CI_Controller {
 
         $this->load->view('booking_form', $data);
     }
+
+    function preview_booking()
+    {
+        $post = $this->input->post();
+        $data['booking'] = $post;
+        $data['package'] = $this->app_model->get_package_details($post['package_id']);
+        $this->load->view('booking_preview', $data);
+    }
+
+    function submit_booking()
+    {
+        $post = $this->input->post();
+
+        // echo '<pre>';
+        // print_r($post);
+        // echo '</pre>';
+        // exit;
+
+        // process booking here (e.g., save to database, send confirmation email, etc.)
+        $insert = $this->booking_model->create_booking($post);
+
+    }
 }
