@@ -1,6 +1,6 @@
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Kaiadmin - Bootstrap 5 Admin Dashboard</title>
+    <title>Admin - PPTP</title>
     <meta
       content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
       name="viewport"
@@ -39,6 +39,7 @@
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/demo.css" />
     <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/datatables.min.js"></script>
+    <link rel="stylesheet" href="<?php echo base_url(); ?>/node_modules/izimodal/css/iziModal.min.css">
   </head>
 
   <style>

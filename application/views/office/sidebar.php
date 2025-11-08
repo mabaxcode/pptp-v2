@@ -287,6 +287,24 @@
                 </div>
               </li>
               */?>
+               <li class="nav-section">
+                <span class="sidebar-mini-icon">
+                  <i class="fa fa-ellipsis-h"></i>
+                </span>
+                <h4 class="text-section">MENU</h4>
+              </li>
+              <li class="nav-item <?php if ($page_name == 'office/booking') echo 'active'; ?>">
+                <a href="<?php echo base_url('office/booking'); ?>">
+                  <i class="fas fa-file"></i>
+                  <p>Booking</p>
+                </a>
+              </li>
+              <li class="nav-item <?php if ($page_name == 'office/payment_transaction') echo 'active'; ?>">
+                <a href="<?php echo base_url('office/payment_transaction'); ?>">
+                  <i class="fas fa-file"></i>
+                  <p>Payment Transaction</p>
+                </a>
+              </li>
               <li class="nav-section">
                 <span class="sidebar-mini-icon">
                   <i class="fa fa-ellipsis-h"></i>
@@ -321,6 +339,18 @@
                 <a href="<?php echo base_url('office/manage_duration'); ?>">
                   <i class="fas fa-file"></i>
                   <p>Duration Package</p>
+                </a>
+              </li>
+              <li class="nav-section">
+                <span class="sidebar-mini-icon">
+                  <i class="fa fa-ellipsis-h"></i>
+                </span>
+                <h4 class="text-section">USER</h4>
+              </li>
+              <li class="nav-item <?php if ($page_name == 'office/user_list') echo 'active'; ?>">
+                <a href="<?php echo base_url('office/user_list'); ?>">
+                  <i class="fas fa-file"></i>
+                  <p>User List</p>
                 </a>
               </li>
             </ul>

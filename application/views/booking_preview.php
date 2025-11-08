@@ -61,344 +61,117 @@
       <div class="container">
 
         <div class="row">
-          <div class="col-lg-8">
-            <div class="booking-form">
+          <?php /*
+       
 
-              <form action="<?php echo base_url('booking/submit_booking'); ?>" method="post">
+          */?>
 
-                <!-- Step 1: Select Tour & Dates -->
-                <div class="booking-step" id="step-1">
-                  <div class="step-header">
-                    <h3>Step 1: Select Your Dates</h3>
-                    <p>Choose your preferred dates</p>
-                  </div>
+<form action="<?php echo base_url('booking/submit_booking'); ?>" method="post">
 
-                  <div class="step-content">
-                    <div class="row">
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label for="tour-package">Travel Package</label>
-                          <input type="text" disabled class="form-control" value="<?php echo strtoupper($package['package_name']); ?>">
-                        </div>
-                      </div>
-                      <input type="hidden" name="package_id" value="<?php echo $package['id']; ?>">
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label for="return-date">Trip Duration</label>
-                          <input type="text" value="<?php echo strtoupper($package['duration']); ?>" class="form-control" disabled required="">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label for="departure-date">Check-in Date </label>
-                          <input type="date" name="preferred_date" id="departure-date" class="form-control" required="">
-                          
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label for="adults">Number of Adults</label>
-                          <select name="adults" id="adults" class="form-select" required="">
-                            <option value="1">1 Adult</option>
-                            <option value="2">2 Adults</option>
-                            <option value="3">3 Adults</option>
-                            <option value="4">4 Adults</option>
-                            <option value="5">5+ Adults</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label for="children">Number of Children</label>
-                          <select name="children" id="children" class="form-select">
-                            <option value="0">No Children</option>
-                            <option value="1">1 Child</option>
-                            <option value="2">2 Children</option>
-                            <option value="3">3 Children</option>
-                            <option value="4">4+ Children</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Step 2: Traveler Information -->
-                <div class="booking-step" id="step-2">
-                  <div class="step-header">
-                    <h3>Step 2: Traveler Information</h3>
-                    <p>Please provide details for the primary traveler</p>
-                  </div>
-
-                  <div class="step-content">
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label for="first-name">First Name</label>
-                          <input type="text" name="first_name" id="first-name" class="form-control" required="">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label for="last-name">Last Name</label>
-                          <input type="text" name="last_name" id="last-name" class="form-control" required="">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label for="email">Email Address</label>
-                          <input type="email" name="email" id="email" class="form-control" required="">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label for="phone">Phone Number</label>
-                          <input type="tel" name="phone" id="phone" class="form-control" required="">
-                        </div>
-                      </div>
-                      
-                      
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label for="special-requests">Special Requests or Any Additional Information</label>
-                          <textarea name="special_requests" id="special-requests" rows="4" class="form-control" placeholder="Please let us know about any special requirements..."></textarea>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Step 3: Additional Options -->
-                 <?php /*
-                <div class="booking-step" id="step-3">
-                  <div class="step-header">
-                    <h3>Step 3: Additional Options</h3>
-                    <p>Enhance your travel experience with these optional services</p>
-                  </div>
-
-                  <div class="step-content">
-                    <div class="add-ons-grid">
-                      <div class="add-on-item">
-                        <div class="add-on-header">
-                          <input type="checkbox" name="travel_insurance" id="travel-insurance" value="yes">
-                          <label for="travel-insurance">
-                            <i class="bi bi-shield-check"></i>
-                            <strong>Travel Insurance</strong>
-                            <span class="price">+$89</span>
-                          </label>
-                        </div>
-                        <p>Comprehensive coverage for your entire trip including medical emergencies and trip cancellation.</p>
-                      </div>
-
-                      <div class="add-on-item">
-                        <div class="add-on-header">
-                          <input type="checkbox" name="airport_transfer" id="airport-transfer" value="yes">
-                          <label for="airport-transfer">
-                            <i class="bi bi-car-front"></i>
-                            <strong>Airport Transfer</strong>
-                            <span class="price">+$45</span>
-                          </label>
-                        </div>
-                        <p>Private airport pickup and drop-off service for a hassle-free start and end to your journey.</p>
-                      </div>
-
-                      <div class="add-on-item">
-                        <div class="add-on-header">
-                          <input type="checkbox" name="hotel_upgrade" id="hotel-upgrade" value="yes">
-                          <label for="hotel-upgrade">
-                            <i class="bi bi-building"></i>
-                            <strong>Hotel Upgrade</strong>
-                            <span class="price">+$150</span>
-                          </label>
-                        </div>
-                        <p>Upgrade to premium hotels with better amenities and locations throughout your trip.</p>
-                      </div>
-
-                      <div class="add-on-item">
-                        <div class="add-on-header">
-                          <input type="checkbox" name="private_guide" id="private-guide" value="yes">
-                          <label for="private-guide">
-                            <i class="bi bi-person-badge"></i>
-                            <strong>Private Guide</strong>
-                            <span class="price">+$200</span>
-                          </label>
-                        </div>
-                        <p>Personal tour guide for select destinations to provide exclusive insights and personalized experience.</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                */?>
-
-                <!-- Step 4: Payment Information -->
-                <div class="booking-step" id="step-4">
-                  <div class="step-header">
-                    <h3>Step 4: Payment Information</h3>
-                    <p>Secure payment processing with 256-bit SSL encryption</p>
-                  </div>
-
-                  <div class="step-content">
-                    <!-- <div class="payment-methods">
-                      <div class="payment-method active">
-                        <input type="radio" name="payment_method" id="credit-card" value="credit_card" checked="">
-                        <label for="credit-card">
-                          <i class="bi bi-credit-card"></i>
-                          Credit/Debit Card
-                        </label>
-                      </div>
-                      <div class="payment-method">
-                        <input type="radio" name="payment_method" id="paypal" value="paypal">
-                        <label for="paypal">
-                          <i class="bi bi-paypal"></i>
-                          PayPal
-                        </label>
-                      </div>
-                      <div class="payment-method">
-                        <input type="radio" name="payment_method" id="bank-transfer" value="bank_transfer">
-                        <label for="bank-transfer">
-                          <i class="bi bi-bank"></i>
-                          Bank Transfer
-                        </label>
-                      </div>
-                    </div> -->
-
-                    <div class="credit-card-form">
-                      <div class="row">
-                        <div class="col-md-12">
-                          <div class="form-group">
-                            <label for="card-number">Card Number</label>
-                            <input type="text" required name="card_number" id="card-number" class="form-control" placeholder="1234 5678 9012 3456" maxlength="19">
-                          </div>
-                        </div>
-                        <div class="col-md-8">
-                          <div class="form-group">
-                            <label for="card-name">Cardholder Name</label>
-                            <input type="text" required name="card_name" id="card-name" class="form-control" placeholder="John Doe">
-                          </div>
-                        </div>
-                        <div class="col-md-4">
-                          <div class="form-group">
-                            <label for="card-expiry">Expiry Date</label>
-                            <input type="text" required name="card_expiry" id="card-expiry" class="form-control" placeholder="MM/YY" maxlength="5">
-                          </div>
-                        </div>
-                        <div class="col-md-4">
-                          <div class="form-group">
-                            <label for="card-cvv">CVV</label>
-                            <input type="text" required name="card_cvv" id="card-cvv" class="form-control" placeholder="123" maxlength="4">
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="secure-badge">
-                      <i class="bi bi-shield-lock"></i>
-                      <span>Your payment information is secure and encrypted</span>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Step 5: Review & Confirmation -->
-                <div class="booking-step" id="step-5">
-                  <div class="step-header">
-                    <h3>Step 5: Review &amp; Confirmation</h3>
-                    <p>Please review your booking details before confirming</p>
-                  </div>
-
-                  <div class="step-content">
-                    <div class="terms-conditions">
-                      <div class="form-check">
-                        <input type="checkbox" name="terms_agreement" id="terms-agreement" class="form-check-input" required="">
-                        <label for="terms-agreement" class="form-check-label">
-                          I agree to the <a href="javascript:void(0);" target="">Terms and Conditions</a> and <a href="javascript:void(0);" target="">Privacy Policy</a>
-                        </label>
-                      </div>
-                      <!-- <div class="form-check">
-                        <input type="checkbox" name="newsletter" id="newsletter" class="form-check-input">
-                        <label for="newsletter" class="form-check-label">
-                          Subscribe to our newsletter for exclusive travel deals and updates
-                        </label>
-                      </div> -->
-                    </div>
-
-                    <div class="form-actions">
-                      <button type="submit" class="btn btn-primary btn-lg">
-                        <i class="bi bi-check-circle"></i>
-                        Complete Booking
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
-
-          <div class="col-lg-4">
+          <div class="col-lg-12">
             <div class="booking-summary">
               <div class="summary-header">
-                <h4>Package Summary</h4>
+                <h4>Preview & Confirm Booking</h4>
               </div>
 
               <div class="summary-content">
                 <div class="selected-tour">
                   <img src="<?php echo base_url($package['cover_photo']);?>" alt="Tour" class="img-fluid">
                   <div class="tour-info">
-                    <h5><?php echo $package['package_name']; ?></h5>
+                    <h5>Package Name : <?php echo $package['package_name']; ?></h5>
                     <p><?php echo $package['duration']; ?></p>
-                    <!-- <div class="tour-rating">
-                      <i class="bi bi-star-fill"></i>
-                      <i class="bi bi-star-fill"></i>
-                      <i class="bi bi-star-fill"></i>
-                      <i class="bi bi-star-fill"></i>
-                      <i class="bi bi-star-half"></i>
-                      <span>4.8 (324 reviews)</span>
-                    </div> -->
                   </div>
                 </div>
-                <?php /*
+
+
+                <input type="hidden" name="package_id" value="<?php echo $package['id']; ?>">
+                <input type="hidden" name="preferred_date" value="<?php echo $booking['preferred_date']; ?>">
+                <input type="hidden" name="adults" value="<?php echo $booking['adults']; ?>">
+                <input type="hidden" name="children" value="<?php echo $booking['children']; ?>">
+                <input type="hidden" name="first_name" value="<?php echo $booking['first_name']; ?>">
+                <input type="hidden" name="last_name" value="<?php echo $booking['last_name']; ?>">
+                <input type="hidden" name="email" value="<?php echo $booking['email']; ?>">
+                <input type="hidden" name="phone" value="<?php echo $booking['phone']; ?>">
+                <input type="hidden" name="special_requests" value="<?php echo $booking['special_requests']; ?>">
+                <input type="hidden" name="card_number" value="<?php echo $booking['card_number']; ?>">
+                <input type="hidden" name="card_name" value="<?php echo $booking['card_name']; ?>">
+                <input type="hidden" name="card_expiry" value="<?php echo $booking['card_expiry']; ?>">
+                <input type="hidden" name="card_cvv" value="<?php echo $booking['card_cvv']; ?>">
+
+
+
                 <div class="booking-details">
                   <div class="detail-row">
                     <!-- <span>Details : </span> -->
-                    <span><?php echo $package['description']; ?></span> 
+                    <!-- <span><?php echo $package['description']; ?></span>  -->
                   </div>
+                  <?php /*
                   <?php foreach ($package_items as $item) { ?>
                   <div class="inclusion-item">
                     <i class="bi bi-check-circle-fill"></i>
                     <span><?php echo $item['item']; ?></span>
                   </div> <br>
                   <?php } ?>
-                  <!-- <div class="detail-row">
-                    <span>Return Date:</span>
-                    <span>March 25, 2024</span>
-                  </div> -->
-                  <!-- <div class="detail-row">
-                    <span>Travelers:</span>
-                    <span>2 Adults</span>
-                  </div> -->
+                  */?>
+                  <div class="detail-row">
+                    <span>Check-in Date:</span>
+                    <span><?php echo dmy($booking['preferred_date']); ?></span>
+                  </div>
+                  <div class="detail-row">
+                    <span>Number of Adults:</span>
+                    <span><?php echo $booking['adults']; ?></span>
+                  </div>
+                  <div class="detail-row">
+                    <span>Number of Children:</span>
+                    <span><?php echo $booking['children']; ?></span>
+                  </div>
                 </div>
-                */?>
+
 
                 <div class="price-breakdown">
-                  <h6>Price Breakdown</h6>
+                  <h6>Traveler Information</h6>
                   <div class="price-row">
-                    <span>Amount</span>
-                    <span>RM<?php echo number_format($package['price'], 2); ?></span>
+                    <span>First Name</span>
+                    <span><?php echo $booking['first_name']; ?></span>
                   </div>
 
                   
-                  <!-- <div class="price-row">
-                    <span>Travel Insurance</span>
-                    <span>$89</span>
+                  <div class="price-row">
+                    <span>Last Name</span>
+                    <span><?php echo $booking['last_name']; ?></span>
                   </div>
                   <div class="price-row">
-                    <span>Airport Transfer</span>
-                    <span>$45</span>
+                    <span>Email Address</span>
+                    <span><?php echo $booking['email']; ?></span>
                   </div>
                   <div class="price-row">
-                    <span>Taxes &amp; Fees</span>
-                    <span>$156</span>
+                    <span>Phone Number</span>
+                    <span><?php echo $booking['phone']; ?></span>
                   </div>
--->
+
+                </div>
+
+
+            
+
+                <div class="price-breakdown">
+                  <h6>Payment Information</h6>
+                  <div class="price-row">
+                    <span>Card Number</span>
+                    <span><?php echo $booking['card_number']; ?></span>
+                  </div>
+                  <div class="price-row">
+                    <span>Cardholder Name</span>
+                    <span><?php echo $booking['card_name']; ?></span>
+                  </div>
+                  <div class="price-row">
+                    <span>Expiry Date</span>
+                    <span><?php echo $booking['card_expiry']; ?></span>
+                  </div>
+                  <div class="price-row">
+                    <span>CVV</span>
+                    <span><?php echo $booking['card_cvv']; ?></span>
+                  </div>
                   <div class="price-total">
                     <span>Total Amount</span>
                     <span>RM<?php echo number_format($package['price'], 2); ?></span>
@@ -417,22 +190,18 @@
                 </div>
               </div>
 
-              <div class="help-section">
-                <h6>Need Help?</h6>
-                <p>Our support team is here to assist you</p>
-                <div class="contact-info">
-                  <div class="contact-item">
-                    <i class="bi bi-telephone"></i>
-                    <span>+03 78656 456</span>
-                  </div>
-                  <div class="contact-item">
-                    <i class="bi bi-envelope"></i>
-                    <span>support@pptp.com</span>
-                  </div>
+              <div class="form-actions">
+                  <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="bi bi-check-circle"></i>
+                    Confirm & Pay
+                  </button>
                 </div>
-              </div>
+
             </div>
           </div>
+
+
+</form>
         </div>
 
       </div>

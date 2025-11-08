@@ -21,6 +21,7 @@ class Auth extends CI_Controller {
         // process login form submission
         // (implementation not shown)
         $post = $_POST;
+
         // echo "<pre>";
         // print_r($post);
         // echo "</pre>";
@@ -34,9 +35,17 @@ class Auth extends CI_Controller {
 
         if ($user && password_verify($password, $user->password)) {
             // login success
+            // echo "Login successful.";exit;
             // set session
             $this->session->set_userdata('user_id', $user->id);
             $this->session->set_userdata('user_name', $user->name);
+
+            update_any_table(
+                array('online' => '1'),
+                array('id' => $user->id),
+                'users'
+            );
+
             // redirect to home page
             if($user->role == '1'){
                 redirect('office');
@@ -100,7 +109,15 @@ class Auth extends CI_Controller {
     }
 
     function logout()
-    {
+    {   
+        $user_id = $this->session->userdata('user_id');
+
+        update_any_table(
+            array('online' => '0'),
+            array('id' => $user_id),
+            'users'
+        );
+
         // destroy session
         $this->session->sess_destroy();
         // redirect to home page

@@ -24,6 +24,21 @@ class User extends CI_Controller {
         $this->load->view('user_profile', $data);
     }
 
+    function bookings()
+    {
+        $data['bookings'] = $this->app_model->get_user_bookings($this->user_id);
+
+        $this->load->view('user_bookings', $data);
+    }
+
+    function booking_details($id)
+    {
+        $data['booking'] = $this->app_model->get_booking_details($id);
+        $data['package'] = $this->app_model->get_package_details($data['booking']['package_id']);
+
+        $this->load->view('user_booking_details', $data);
+    }
+
     function update_profile()
     {
         $post = $this->input->post();

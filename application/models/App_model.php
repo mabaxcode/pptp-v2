@@ -83,4 +83,31 @@ class App_model extends CI_Model {
         return $query->result_array();
     }
 
+    function is_duplicate_booking_date($package_id, $preferred_date)
+    {
+        $this->db->where('package_id', $package_id);
+        $this->db->where('check_in_date', $preferred_date);
+        $query = $this->db->get('bookings');
+
+        if ($query->num_rows() > 0) {
+            return true; // duplicate found
+        } else {
+            return false; // no duplicate
+        }
+    }
+
+    function get_user_bookings($user_id)
+    {
+        $this->db->where('user_id', $user_id);
+        $query = $this->db->get('bookings');
+        return $query->result_array();
+    }
+
+    function get_booking_details($booking_id)
+    {
+        $this->db->where('id', $booking_id);
+        $query = $this->db->get('bookings');
+        return $query->row_array();
+    }
+
 }

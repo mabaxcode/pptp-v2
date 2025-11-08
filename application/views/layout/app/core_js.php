@@ -1,4 +1,7 @@
-<script src="<?php echo base_url(); ?>assets/js/core/jquery-3.7.1.min.js"></script>
+    
+    <script>var base_url = "<?php echo base_url(); ?>";</script>
+    <script src="<?php echo base_url(); ?>assets/js/jq.js"></script>
+    <script src="<?php echo base_url(); ?>assets/js/core/jquery-3.7.1.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/js/core/popper.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/js/core/bootstrap.min.js"></script>
 
@@ -33,9 +36,48 @@
     <!-- Kaiadmin DEMO methods, don't include it in your project! -->
     <script src="<?php echo base_url(); ?>assets/js/setting-demo.js"></script>
     <script src="<?php echo base_url(); ?>assets/js/demo.js"></script>
-    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+
+    <script src="<?php echo base_url(); ?>node_modules/izimodal/js/iziModal.min.js" type="text/javascript"></script>
+
+    <div id="modal-booking-details" class="iziModal"></div>
+
     <script>
-      var base_url = "<?php echo base_url(); ?>";
+      
+      
+
+      
+
+      $(document).on('click', '.view-booking-detail', function (event) {
+          event.preventDefault();
+          // init modal
+          $('#modal-booking-details').iziModal({
+            title: "BOOKING DETAILS",
+            headerColor: '#88A0B9',
+            width: 900,
+            zindex: 999,
+          });
+
+          var bookingId = $(this).data('initid');
+
+          // load content using ajax
+          $.ajax({
+            type: "POST",
+            url: base_url + 'office/get_booking_details',
+            async: true,
+            dataType: 'html',
+            data: {bookingId:bookingId},
+            success: function(data) {
+              console.log(data);
+              $('#modal-booking-details').iziModal('setContent', data);
+              $('#modal-booking-details').iziModal('open');
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+              console.log(textStatus, errorThrown);
+            }
+          });
+        
+      });
+
       // alert(base_url);
       $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
         type: "line",
@@ -289,6 +331,8 @@
         });
       });
 
+      
+
       $(document).on('click', '.add-itinerary-btn', function(e) {
         e.preventDefault;
         // alert ('clicked');
@@ -334,5 +378,7 @@
           }
         });
       });
+      
+      
 
     </script>

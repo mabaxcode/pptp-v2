@@ -47,7 +47,7 @@
                             <th width="20%">Package Name</th>
                             <th width="45%">Description</th>
                             <th width="15%">Cover Photo</th>
-                            <th width="15%">Action</th>
+                            <th width="15%" style="text-align:center;">Action</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -82,7 +82,7 @@
                                 No Photo
                               <?php endif; ?>
                             </td>
-                            <td>
+                            <td align="center">
                               <a href="<?php echo base_url('office/edit_package/' . $package['id']); ?>" class="btn btn-sm btn-warning">Edit</a>
                               <a href="<?php echo base_url('office/delete_package/' . $package['id']); ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this package?');">Delete</a>
                             </td>

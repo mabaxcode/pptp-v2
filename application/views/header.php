@@ -9,11 +9,11 @@
 
       <nav id="navmenu" class="navmenu">
         <ul>
-          <li><a href="<?php echo base_url(); ?>" class="active">Home</a></li>
-          <li><a href="#">About</a></li>
+          <li><a href="<?php echo base_url(); ?>" <?php if($this->uri->segment(2) == ""){ echo 'class="active"'; } ?>>Home</a></li>
+          <!-- <li><a href="#">About</a></li> -->
           <!-- <li><a href="destinations.html">Destinations</a></li> -->
-          <li><a href="<?php echo base_url('welcome/package'); ?>">Package</a></li>
-          <li><a href="<?php echo base_url('welcome/gallery'); ?>">Gallery</a></li>
+          <li><a href="<?php echo base_url('welcome/package'); ?>" <?php if($this->uri->segment(2) == "package"){ echo 'class="active"'; } ?>>Package <?//php echo $this->uri->segment(2); ?></a></li>
+          <li><a href="<?php echo base_url('welcome/gallery'); ?>" <?php if($this->uri->segment(2) == "gallery"){ echo 'class="active"'; } ?>>Gallery</a></li>
           <!-- <li><a href="blog.html">Blog</a></li> -->
           <!-- <li class="dropdown"><a href="#"><span>More Pages</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
             <ul>
@@ -29,7 +29,7 @@
             </ul>
           </li> -->
           <?php if($this->session->userdata('user_id')): ?>
-            <li><a href="#">My Booking</a></li>
+            <li><a href="<?php echo base_url('user/bookings'); ?>" <?php if($this->uri->segment(2) == "bookings"){ echo 'class="active"'; } ?>>My Booking</a></li>
             <?php /* <li><a href="#">Welcome, <?php echo ucfirst($this->session->userdata('user_name')); ?></a></li> */ ?>
             <li class="dropdown"><a href="#"><span>Welcome, <?php echo ucfirst($this->session->userdata('user_name')); ?></span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
             <ul>

@@ -522,10 +522,29 @@
 
   <script>
     var success_login = <?php echo json_encode($this->session->flashdata('success_login')); ?>;
+    var success_booking = <?php echo json_encode($this->session->flashdata('success_booking')); ?>;
+    var error_booking = <?php echo json_encode($this->session->flashdata('error_booking')); ?>;
+
     if(success_login){
       iziToast.success({
           title: 'Welcome !',
           message: 'Login successfully.',
+          position: 'topRight'
+      });
+    }
+
+    if(success_booking){
+      iziToast.success({
+          title: 'Notification !',
+          message: 'Booking successful.',
+          position: 'topRight'
+      });
+    }
+
+    if(error_booking){
+      iziToast.error({
+          title: 'Notification !',
+          message: 'Booking failed. Please try again.',
           position: 'topRight'
       });
     }

@@ -22,6 +22,7 @@
   <link href="<?php echo base_url();?>assets2/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   <link href="<?php echo base_url();?>assets2/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
   <link href="<?php echo base_url();?>assets2/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="<?php echo base_url(); ?>node_modules/izitoast/dist/css/iziToast.min.css">
 
   <!-- Main CSS File -->
   <link href="<?php echo base_url();?>assets2/css/main.css" rel="stylesheet">
@@ -91,7 +92,7 @@
                       <div class="col-md-6">
                         <div class="form-group">
                           <label for="departure-date">Check-in Date </label>
-                          <input type="date" name="preferred_date" id="departure-date" class="form-control" required="">
+                          <input type="date" name="preferred_date" id="checkin-date" data-init="<?php echo $package['id'] ?>" class="form-control" required="">
                           
                         </div>
                       </div>
@@ -324,7 +325,7 @@
                     <div class="form-actions">
                       <button type="submit" class="btn btn-primary btn-lg">
                         <i class="bi bi-check-circle"></i>
-                        Complete Booking
+                        Preview & Confirm Booking
                       </button>
                     </div>
                   </div>
@@ -457,30 +458,53 @@
   <script src="<?php echo base_url();?>assets2/vendor/glightbox/js/glightbox.min.js"></script>
   <script src="<?php echo base_url();?>assets2/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
   <script src="<?php echo base_url();?>assets2/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="<?php echo base_url(); ?>node_modules/izitoast/dist/js/iziToast.min.js" type="text/javascript"></script>
 
   <!-- Main JS File -->
   <script src="<?php echo base_url();?>assets2/js/main.js"></script>
-
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script>
-    // Calculate end date based on preferred date and package duration
-    // document.getElementById('departure-date').addEventListener('change', function() {
-    //   var preferredDate = new Date(this.value);
-    //   var durationText = "<?php echo $package['duration']; ?>"; // e.g., "3 Days"
-    //   var durationDays = parseInt(durationText); // Extract number of days
+    var base_url = "<?php echo base_url(); ?>";
+    // check duplicated check in date
+    document.getElementById('checkin-date').addEventListener('change', function() {
+        var checkinDate = this.value;
+        var id = $(this).data('init');
+        // You can add AJAX here to check against existing bookings in the database
+        // console.log('Selected Check-in Date: ' + checkinDate);
+        // For demonstration, let's assume we found a duplicate date
+        // var isDuplicate = false; // Change to true to simulate duplicate
 
-    //   if (!isNaN(preferredDate.getTime()) && !isNaN(durationDays)) {
-    //     var endDate = new Date(preferredDate);
-    //     endDate.setDate(endDate.getDate() + durationDays - 1); // Subtract 1 to include start date
+        // send to server to check using ajax
+        $.ajax({
+            type: "POST",
+            url: base_url + 'booking/check_duplicate_date',
+            data: {checkinDate:checkinDate, id:id},
+            async: true,
+            dataType: 'json',
+            success: function(data) {
+              console.log(data);
+              if (data.status == true) {
+                  // isDuplicate = true;
+                  // alert('The selected check-in date is already booked. Please choose another date.');
+                  iziToast.error({
+                      title: 'Fully Booked !',
+                      message: 'The selected check-in date is already booked. Please choose another date.',
+                      position: 'topCenter',
+                      transitionIn: 'bounceInLeft'
+                  });
+                  document.getElementById('checkin-date').value = ''; // Clear the input
+              }              
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+              console.log(textStatus, errorThrown);
+            }
+        });
 
-    //     var day = ("0" + endDate.getDate()).slice(-2);
-    //     var month = ("0" + (endDate.getMonth() + 1)).slice(-2);
-    //     var year = endDate.getFullYear();
-
-    //     document.getElementById('end-date').value = year + "-" + month + "-" + day;
-    //   } else {
-    //     document.getElementById('end-date').value = "";
-    //   }
-    // });
+        // if (isDuplicate) {
+        //     alert('The selected check-in date is already booked. Please choose another date.');
+        //     this.value = ''; // Clear the input
+        // }
+    });
   </script>
 
 </body>

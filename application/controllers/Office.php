@@ -35,6 +35,44 @@ class Office extends CI_Controller {
 	{   
         $data['page_title'] = 'Office Dashboard';
         $data['page_name'] = 'office/dashboard';
+
+		// total user
+		// get where role user
+		$data['total_users'] = $this->db->get_where('users', array('role' => '0'))->num_rows();
+
+		// total packages
+		$data['total_packages'] = $this->db->get('packages')->num_rows();
+
+		// total bookings
+		$data['total_bookings'] = $this->db->get('bookings')->num_rows();
+
+		$bookings = $this->db->get('bookings')->result_array();
+
+		$data['online_user'] = $this->db->get_where('users', array('role' => '0', 'online' => '1'))->num_rows();
+
+		// total payments
+		$data['total_payments'] = 0;
+		foreach ($bookings as $booking) {
+			$package_detail = get_any_table_row(['id' => $booking['package_id']],'packages');
+			$data['total_payments'] += $package_detail['price'];
+		}
+
+		// total payment this month
+		$data['total_payments_this_month'] = 0;
+		$current_month = date('m');
+		foreach ($bookings as $booking) {
+			$booking_month = date('m', strtotime($booking['created_at']));
+			if ($booking_month == $current_month) {
+				$package_detail = get_any_table_row(['id' => $booking['package_id']],'packages');
+				$data['total_payments_this_month'] += $package_detail['price'];
+			}
+		}
+
+		$start = date('M 1');           // First day of current month
+		$end = date('M j');             // Current date (day only)
+
+		$data['this_month'] = $start . ' - ' . $end;
+
 		$this->load->view('office/main', $data);
 	}
 
@@ -64,6 +102,16 @@ class Office extends CI_Controller {
 		$data['page_name'] = 'office/manage_category';
 
 		$data['categories'] = $this->db->get('categories')->result_array();
+
+		$this->load->view('office/main', $data);
+	}
+
+	function user_list()
+	{   
+		$data['page_title'] = 'User List';
+		$data['page_name'] = 'office/user_list';
+
+		$data['users'] = $this->db->get_where('users', array('role' => '0'))->result_array();
 
 		$this->load->view('office/main', $data);
 	}
@@ -692,5 +740,38 @@ class Office extends CI_Controller {
 		// 	'message' => 'Package item has been added successfully.'
 		// );
 		// echo json_encode($response);
+	}
+
+	function booking($data=false)
+	{
+		$data['page_title'] = 'Booking';
+		$data['page_name'] = 'office/booking';
+		$data['bookings'] = $this->db->get('bookings')->result_array();
+
+		$this->load->view('office/main', $data);
+	}
+
+	function payment_transaction($data=false)
+	{
+		$data['page_title'] = 'Payment Transaction';
+		$data['page_name'] = 'office/payment_transaction';
+		$data['transactions'] = $this->db->get('bookings')->result_array();
+
+		$this->load->view('office/main', $data);
+	}
+
+	function get_booking_details($data=false)
+	{
+		$id = $this->input->post('bookingId');
+		$data['booking'] = $this->db->get_where('bookings', array('id' => $id))->row_array();
+		$data['package'] = $this->db->get_where('packages', array('id' => $data['booking']['package_id']))->row_array();
+		$this->load->view('office/booking_details', $data);
+	}
+
+	function block_user($id) {
+		$this->db->where('id', $id);
+		$this->db->update('users', array('blocked' => '1'));
+		$this->session->set_flashdata('success', 'User has been blocked successfully.');
+		redirect('office/user_list');
 	}
 }

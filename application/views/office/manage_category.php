@@ -41,7 +41,7 @@
                     <div class="table-responsive">
                       <table
                         id="basic-datatables"
-                        class=" table table-striped table-hover"
+                        class="table table-striped table-hover"
                       >
                         <thead>
                           <tr>
