@@ -51,6 +51,11 @@ class Auth extends CI_Controller {
                 redirect('office');
                 return;
             }
+            if($user->role == '2'){
+                redirect('vendor');
+                return;
+            }
+
             $this->session->set_flashdata('success_login', 'Login successful.');
             redirect('/');
         } else {
