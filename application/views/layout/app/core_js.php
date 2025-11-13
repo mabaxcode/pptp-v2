@@ -40,11 +40,188 @@
     <script src="<?php echo base_url(); ?>node_modules/izimodal/js/iziModal.min.js" type="text/javascript"></script>
 
     <div id="modal-booking-details" class="iziModal"></div>
+    <div id="modal-process-vendor" class="iziModal"></div>
+    <div id="modal-view-vendor" class="iziModal"></div>
 
     <script>
-      
-      
 
+      $('#modal-process-vendor').iziModal({
+        title: "PROCESS VENDOR APPLICATION",
+        headerColor: '#88A0B9',
+        width: 900,
+        zindex: 999,
+        // zindex: 99999,
+        // overlayClose: true,
+      });
+
+      $('#modal-view-vendor').iziModal({
+        title: "VENDOR DETAILS",
+        headerColor: '#88A0B9',
+        width: 900,
+        zindex: 999,
+        // zindex: 99999,
+        // overlayClose: true,
+      });
+
+      $(document).on('click', '.btn-process-vendor', function (event) {
+          event.preventDefault();
+
+          var id = $(this).data('init');
+
+          // load content using ajax
+          $.ajax({
+            type: "POST",
+            url: base_url + 'office/process_vendor_modal',
+            async: true,
+            dataType: 'html',
+            data: {id:id},
+            success: function(data) {
+              // console.log(data);
+              $('#modal-process-vendor').iziModal('setContent', data);
+              $('#modal-process-vendor').iziModal('open');
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+              console.log(textStatus, errorThrown);
+            }
+          });
+        
+      });
+
+      $(document).on('click', '.btn-view-vendor', function (event) {
+          event.preventDefault();
+
+          var id = $(this).data('init');
+
+          // load content using ajax
+          $.ajax({
+            type: "POST",
+            url: base_url + 'office/view_vendor_modal',
+            async: true,
+            dataType: 'html',
+            data: {id:id},
+            success: function(data) {
+              // console.log(data);
+              $('#modal-view-vendor').iziModal('setContent', data);
+              $('#modal-view-vendor').iziModal('open');
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+              console.log(textStatus, errorThrown);
+            }
+          });
+        
+      });
+
+      $(document).on('click', '#btn-proceed-vendor', function (event) {
+          event.preventDefault();
+
+          var vendor_form_id = $(this).data('init');
+          var decision = $('#decision').val();
+          var remark = $('textarea[name="remark_decision"]').val();
+
+          // validate
+          if (decision === '') {
+            $("#decision").focus();
+            $("#decision").css("border", "1px solid red");
+              $.notify({
+                icon: 'icon-close',
+                title: 'Alert !',
+                message: 'Please select a decision.',
+              },{
+                type: 'danger',
+                placement: {
+                  from: "top",
+                  align: "center"
+                },
+                time: 1000,
+              });
+              return;
+            return;
+          }
+
+          if(decision === 'reject'){
+            // remark is required
+            if (remark.trim() === '') {
+              $("textarea[name='remark_decision']").focus();
+              $("textarea[name='remark_decision']").css("border", "1px solid red");
+                $.notify({
+                  icon: 'icon-close',
+                  title: 'Alert !',
+                  message: 'Please provide a remark for rejection.',
+                },{
+                  type: 'danger',
+                  placement: {
+                    from: "top",
+                    align: "center"
+                  },
+                  time: 1000,
+                });
+                return;
+              return;
+            }
+          }
+
+
+          swal({
+              title: "Are you sure?",
+              text: "Proceed this application.",
+              type: "warning",
+              icon: "warning",
+              buttons: {
+                cancel: {
+                  visible: true,
+                  text: "Cancel",
+                  className: "btn btn-danger",
+                },
+                confirm: {
+                  text: "Yes, Proceed!",
+                  className: "btn btn-primary",
+                },
+              },
+            }).then((willDelete) => {
+              if (willDelete) {
+                $.ajax({
+                  type: "POST",
+                  url: base_url + 'office/proceed_vendor_application',
+                  async: true,
+                  dataType: 'json',
+                  data: {vendor_form_id:vendor_form_id, decision:decision, remarks:remark},
+                  success: function(data) {
+                    console.log(data);
+                    if (data.status === 'success') {
+                      $('#modal-process-vendor').iziModal('close');
+
+                      swal(data.message, {
+                      icon: "success",
+                      title: "Success !",
+                      buttons: {
+                        confirm: {
+                          className: "btn btn-primary",
+                        },
+                      },
+                    }).then((value) => {
+                      // This runs when the confirm button is clicked
+                      if (value) {
+                          location.reload();
+                      }
+                    });
+
+
+                    } else {
+                      alert(data.message);
+                    }
+                  },
+                  error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                  }
+                });
+              }
+            });
+      });
+
+          
+
+          
+        
       
 
       $(document).on('click', '.view-booking-detail', function (event) {
@@ -108,6 +285,15 @@
 
       $("#basic-datatables").DataTable({
         // remove sorting
+        "ordering": false
+      });
+
+      $("#basic-datatables-approved").DataTable({
+        // remove sorting
+        "ordering": false
+      });
+
+      $("#basic-datatables-rejected").DataTable({
         "ordering": false
       });
 

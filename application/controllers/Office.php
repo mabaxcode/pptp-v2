@@ -96,6 +96,28 @@ class Office extends CI_Controller {
 		$this->load->view('office/main', $data);
 	}
 
+	function vendor_application($data=false)
+	{
+		$data['page_title'] = 'Vendor Application';
+		$data['page_name'] = 'office/vendor_application';
+
+		// get where status pending
+
+		// $data['applications'] = $this->db->get('vendor_form')->result_array();
+
+		$data['applications'] = $this->db->get_where('vendor_form', array('status' => 'pending'))->result_array();
+		$data['approved_applications'] = $this->db->get_where('vendor_form', array('status' => 'approved'))->result_array();
+		$data['rejected_applications'] = $this->db->get_where('vendor_form', array('status' => 'rejected'))->result_array();
+
+
+		// count pending vendor form
+		$data['pending_count'] = $this->db->get_where('vendor_form', array('status' => 'pending'))->num_rows();
+		$data['approved_count'] = $this->db->get_where('vendor_form', array('status' => 'approved'))->num_rows();
+		$data['rejected_count'] = $this->db->get_where('vendor_form', array('status' => 'rejected'))->num_rows();
+
+		$this->load->view('office/main', $data);
+	}
+
 	function manage_category()
 	{   
 		$data['page_title'] = 'Manage Category';
@@ -768,10 +790,107 @@ class Office extends CI_Controller {
 		$this->load->view('office/booking_details', $data);
 	}
 
+	function process_vendor_modal($data=false)
+	{
+		$id = $this->input->post('id');
+		$data['vendor_form'] = $this->db->get_where('vendor_form', array('id' => $id))->row_array();
+
+		// get user details
+		$data['user'] = $this->db->get_where('users', array('id' => $data['vendor_form']['user_id']))->row_array();
+
+		// get ic_file and ssm_file from vendor_documents table
+		$data['ic_file'] = $this->db->get_where('vendor_documents', array('vendor_form_id' => $id, 'user_id' => $data['vendor_form']['user_id'], 'document_type' => 'ic'))->row_array();
+		$data['ssm_file'] = $this->db->get_where('vendor_documents', array('vendor_form_id' => $id, 'user_id' => $data['vendor_form']['user_id'], 'document_type' => 'ssm'))->row_array();
+
+
+		$this->load->view('office/process_vendor_details', $data);
+	}
+
+	function view_vendor_modal($data=false)
+	{
+		$id = $this->input->post('id');
+		$data['vendor_form'] = $this->db->get_where('vendor_form', array('id' => $id))->row_array();
+
+		// get user details
+		$data['user'] = $this->db->get_where('users', array('id' => $data['vendor_form']['user_id']))->row_array();
+
+		// get ic_file and ssm_file from vendor_documents table
+		$data['ic_file'] = $this->db->get_where('vendor_documents', array('vendor_form_id' => $id, 'user_id' => $data['vendor_form']['user_id'], 'document_type' => 'ic'))->row_array();
+		$data['ssm_file'] = $this->db->get_where('vendor_documents', array('vendor_form_id' => $id, 'user_id' => $data['vendor_form']['user_id'], 'document_type' => 'ssm'))->row_array();
+
+
+		$this->load->view('office/view_vendor_details', $data);
+	}
+
 	function block_user($id) {
 		$this->db->where('id', $id);
 		$this->db->update('users', array('blocked' => '1'));
 		$this->session->set_flashdata('success', 'User has been blocked successfully.');
 		redirect('office/user_list');
+	}
+
+	function proceed_vendor_application($data=false)
+	{
+		$post = $this->input->post();
+
+		// echo "<pre>"; print_r($post); echo "</pre>"; exit;
+
+		$vendor_form_id = $post['vendor_form_id'];
+		$decision = $post['decision'];
+		$remarks = $post['remarks'];
+
+		// if remark empty set to '-'
+		if (empty($remarks)) {
+			$remarks = '-';
+		}
+
+		// update vendor_form table
+		$this->db->where('id', $vendor_form_id);
+		$this->db->update('vendor_form', array(
+			'status' => $decision,
+			'remarks' => $remarks,
+			'processed_at' => date('Y-m-d H:i:s')
+		));
+
+		// echo $this->db->last_query();exit;
+
+		$response = array(
+			'status' => 'success',
+			'message' => 'Vendor application has been processed successfully.'
+		);
+		echo json_encode($response);
+	}
+
+	function view_document($id)
+	{
+		$document = $this->db->get_where('vendor_documents', array('id' => $id))->row_array();
+
+		# only view
+		if ($document) {
+			$file_path = FCPATH . $document['file_path'];
+			if (file_exists($file_path)) {
+				// Get MIME type
+				$mime = mime_content_type($file_path);
+		
+				// Set headers to display in browser
+				header('Content-Type: ' . $mime);
+				header('Content-Length: ' . filesize($file_path));
+				header('Content-Disposition: inline; filename="' . basename($document['original_filename']) . '"');
+				header('Cache-Control: public, max-age=0');
+		
+				// Clear output buffer
+				ob_clean();
+				flush();
+		
+				// Read the file
+				readfile($file_path);
+				exit;
+			} else {
+				show_404();
+			}
+		} else {
+			show_404();
+		}
+		
 	}
 }

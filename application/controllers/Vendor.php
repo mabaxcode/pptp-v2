@@ -18,21 +18,145 @@ class Vendor extends CI_Controller {
 	public function index()
 	{   
         $data['page_title'] = 'Vendor Dashboard';
-        $data['page_name'] = 'vendor/dashboard';
+        
+
+		$data['user'] = $this->db->get_where('users', array('role' => '2', 'id' => $this->user_id))->row_array();
+		$vendor_form = $this->db->get_where('vendor_form', array('user_id' => $this->user_id))->row_array();
+
+		if(!$vendor_form){
+			$data['page_name'] = 'vendor/verification_wizard';
+		}else{
+			// pending review
+			if($vendor_form['status'] == 'pending'){
+				$data['application_id'] = $vendor_form['id'];
+				$data['page_name'] = 'vendor/pending_review';
+			}else{
+				$data['page_name'] = 'vendor/dashboard';
+			}
+		}
 
 		$this->load->view('vendor/main', $data);
+	}
+
+	function submit_vendor_application($data=false)
+	{
+		$post = $this->input->post();
+
+		// echo "<pre>"; print_r($post); echo "</pre>";
+
+		// insert to vendor_form table
+		$insert_data = array(
+			'user_id' => $this->user_id,
+			'nric' => $post['nric'],
+			'phone_no' => $post['phone_no'],
+			'company_name' => $post['company_name'],
+			'bank_name' => $post['bank_name'],
+			'account_no' => $post['account_no'],
+			'status' => 'pending',
+			'created_at' => date('Y-m-d H:i:s')
+		);
+
+		$this->db->insert('vendor_form', $insert_data);
+		$insert_id = $this->db->insert_id();
+
+		// update name and email in users table
+		$this->db->where('id', $this->user_id);
+		$this->db->update('users', array(
+			'name' => $post['fullname'],
+			'email' => $post['email']
+		));		
+
+		// do upload file ic file and ssm file
+		$ic_file = $_FILES['ic_file'];
+		$ssm_file = $_FILES['ssm_file'];
+		if (!empty($ic_file['name'])) {
+			$ext = pathinfo($ic_file['name'], PATHINFO_EXTENSION);
+			$hashed_name = md5($ic_file['name'] . time());
+			$ic_file_name = 'vendor_' . $insert_id . '_ic_' . $hashed_name . '.' . $ext;
+			$config['upload_path'] = './uploads/vendor_forms/';
+			$config['allowed_types'] = 'jpg|jpeg|png|pdf';
+			$config['file_name'] = $ic_file_name;
+			$this->load->library('upload', $config);
+			if ($this->upload->do_upload('ic_file')) {
+				$ic_data = $this->upload->data();
+				$ic_file_path = 'uploads/vendor_forms/' . $ic_data['file_name'];
+
+				// insert at new table : table name vendor documents
+				$icFileData = array(
+					'vendor_form_id' => $insert_id,
+					'document_type' => 'ic',
+					'user_id' => $this->user_id,
+					'file_path' => $ic_file_path,
+					'original_filename' => $ic_file['name'],
+					'uploaded_at' => date('Y-m-d H:i:s')
+				);
+				$this->db->insert('vendor_documents', $icFileData);
+
+				// $this->db->where('id', $insert_id);
+				// $this->db->update('vendor_form', array('ic_file' => $ic_file_path, 'original_filename' => $ic_file['name']));
+			}else{
+				// Upload failed
+				$response = array(
+					'status' => 'error',
+					'message' => 'IC File upload failed: ' . $this->upload->display_errors()
+				);
+				echo json_encode($response);
+				return;
+			}
+		}
+
+		if (!empty($ssm_file['name'])) {
+			$ext = pathinfo($ssm_file['name'], PATHINFO_EXTENSION);
+			$hashed_name = md5($ssm_file['name'] . time());
+			$ssm_file_name = 'vendor_' . $insert_id . '_ssm_' . $hashed_name . '.' . $ext;
+			$config['upload_path'] = './uploads/vendor_forms/';
+			$config['allowed_types'] = 'jpg|jpeg|png|pdf';
+			$config['file_name'] = $ssm_file_name;
+			$this->load->library('upload', $config);
+			if ($this->upload->do_upload('ssm_file')) {
+				$ssm_data = $this->upload->data();
+				$ssm_file_path = 'uploads/vendor_forms/' . $ssm_data['file_name'];
+
+				$ssmFileData = array(
+					'vendor_form_id' => $insert_id,
+					'document_type' => 'ssm',
+					'user_id' => $this->user_id,
+					'file_path' => $ssm_file_path,
+					'original_filename' => $ssm_file['name'],
+					'uploaded_at' => date('Y-m-d H:i:s')
+				);
+				$this->db->insert('vendor_documents', $ssmFileData);
+
+				// $this->db->where('id', $insert_id);
+				// $this->db->update('vendor_form', array('ssm_file' => $ssm_file_path, 'original_ssm_filename' => $ssm_file['name']));
+			}else{
+				// Upload failed
+				$response = array(
+					'status' => 'error',
+					'message' => 'SSM File upload failed: ' . $this->upload->display_errors()
+				);
+				echo json_encode($response);
+				return;
+			}
+		}
+
+		$response = array(
+			'status' => 'success',
+			'message' => 'Vendor application submitted successfully.'
+		);
+		echo json_encode($response);
 	}
 
 	public function manage_package()
 	{   
 		$data['page_title'] = 'Manage Package';
-		$data['page_name'] = 'office/manage_package';
+		$data['page_name'] = 'vendor/manage_package';
 
 		// how to join categories table to get category names add where status = 1
 		$this->db->select('packages.*, categories.name as category_name');
 		$this->db->from('packages');
 		$this->db->join('categories', 'FIND_IN_SET(categories.id, packages.categories) > 0', 'left');
-		$this->db->where('packages.status', 1);
+		// $this->db->where('packages.status', 1);
 		$query = $this->db->get();
 		$data['packages'] = $query->result_array();
 		// $data['packages'] = $this->db->get_where('packages', array('status' => 1))->result_array();
@@ -40,7 +164,81 @@ class Vendor extends CI_Controller {
 		
 
 
-		$this->load->view('office/main', $data);
+		$this->load->view('vendor/main', $data);
+	}
+
+	function view_application($id)
+	{
+		$data['page_title'] = 'View Application';
+		$data['page_name'] = 'vendor/view_application';
+
+		$data['application'] = $this->db->get_where('vendor_form', array('id' => $id))->row_array();
+		$data['user'] = $this->db->get_where('users', array('role' => '2', 'id' => $this->user_id))->row_array();
+
+		// $data['application_documents'] = $this->db->get_where('vendor_documents', array('vendor_form_id' => $id, 'user_id' => $this->user_id))->result_array();
+
+		$data['ic_file'] = $this->db->get_where('vendor_documents', array('vendor_form_id' => $id, 'user_id' => $this->user_id, 'document_type' => 'ic'))->row_array();
+		$data['ssm_file'] = $this->db->get_where('vendor_documents', array('vendor_form_id' => $id, 'user_id' => $this->user_id, 'document_type' => 'ssm'))->row_array();
+
+		$this->load->view('vendor/main', $data);
+	}
+
+	function view_document($id)
+	{
+		$document = $this->db->get_where('vendor_documents', array('id' => $id))->row_array();
+
+		# download once click
+		// if ($document) {
+		// 	$file_path = FCPATH . $document['file_path'];
+		// 	if (file_exists($file_path)) {
+		// 		// Set headers
+		// 		header('Content-Description: File Transfer');
+		// 		header('Content-Type: application/octet-stream');
+		// 		header('Content-Disposition: attachment; filename="' . basename($document['original_filename']) . '"');
+		// 		header('Expires: 0');
+		// 		header('Cache-Control: must-revalidate');
+		// 		header('Pragma: public');
+		// 		header('Content-Length: ' . filesize($file_path));
+		// 		// Clear output buffer
+		// 		ob_clean();
+		// 		flush();
+		// 		// Read the file
+		// 		readfile($file_path);
+		// 		exit;
+		// 	} else {
+		// 		show_404();
+		// 	}
+		// } else {
+		// 	show_404();
+		// }
+
+		# only view
+		if ($document) {
+			$file_path = FCPATH . $document['file_path'];
+			if (file_exists($file_path)) {
+				// Get MIME type
+				$mime = mime_content_type($file_path);
+		
+				// Set headers to display in browser
+				header('Content-Type: ' . $mime);
+				header('Content-Length: ' . filesize($file_path));
+				header('Content-Disposition: inline; filename="' . basename($document['original_filename']) . '"');
+				header('Cache-Control: public, max-age=0');
+		
+				// Clear output buffer
+				ob_clean();
+				flush();
+		
+				// Read the file
+				readfile($file_path);
+				exit;
+			} else {
+				show_404();
+			}
+		} else {
+			show_404();
+		}
+		
 	}
 
 	function manage_category()
@@ -76,12 +274,12 @@ class Vendor extends CI_Controller {
 	public function add_package()
 	{   
 		$data['page_title'] = 'Add Package';
-		$data['page_name'] = 'office/add_package';
+		$data['page_name'] = 'vendor/add_package';
 
 		$data['categories'] = $this->db->get('categories')->result_array();
 		$data['durations'] = $this->db->get('durations')->result_array();
 
-		$this->load->view('office/main', $data);
+		$this->load->view('vendor/main', $data);
 	}
 
 	public function save_category()
@@ -158,7 +356,7 @@ class Vendor extends CI_Controller {
 			'package_name' => $package_name,
 			'description' => $description,
 			'tag' => $tag,
-			'status' => '1',
+			'status' => '0', // default to inactive
 			'duration' => $duration,
 			'price' => $price,
 			'categories' => json_encode($categories) // Store as JSON
@@ -177,7 +375,7 @@ class Vendor extends CI_Controller {
 
 		if ($this->form_validation->run() == FALSE) {
 			$this->session->set_flashdata('error', validation_errors());
-			redirect('office/add_package');
+			redirect('vendor/add_package');
 
 		}else{
 			$id = $this->add_package_to_db($data);
@@ -231,7 +429,7 @@ class Vendor extends CI_Controller {
 				} else {
 					// Upload failed
 					$this->session->set_flashdata('error', $this->upload->display_errors());
-					redirect('office/add_package');
+					redirect('vendor/add_package');
 				}
 			}
 
@@ -296,7 +494,7 @@ class Vendor extends CI_Controller {
 			// exit;
 			
 			$this->session->set_flashdata('success', 'Package has been added successfully.');
-			redirect('office/add_package');
+			redirect('vendor/add_package');
 		}
 		
 	}

@@ -62,7 +62,7 @@
     color: #fff !important;
   }
 
-  .alert,
+
   .bootstrap-notify-container,
   .notify,
   [data-notify="container"] {

@@ -30,7 +30,7 @@
           <div class="sidebar-content">
             <ul class="nav nav-secondary">
               <li class="nav-item">
-                <a href="<?php echo base_url('office'); ?>">
+                <a href="<?php echo base_url('vendor'); ?>">
                   <i class="fas fa-home"></i>
                   <p>Dashboard</p>
                 </a>
@@ -292,6 +292,12 @@
                   <i class="fa fa-ellipsis-h"></i>
                 </span>
                 <h4 class="text-section">MENU</h4>
+              </li>
+              <li class="nav-item <?php if ($page_name == 'vendor/manage_package') echo 'active'; ?>">
+                <a href="<?php echo base_url('vendor/manage_package'); ?>">
+                  <i class="fas fa-clipboard"></i>
+                  <p>Manage Packages</p>
+                </a>
               </li>
               <li class="nav-item <?php if ($page_name == 'office/booking') echo 'active'; ?>">
                 <a href="<?php echo base_url('office/booking'); ?>">

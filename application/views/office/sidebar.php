@@ -35,6 +35,8 @@
                   <p>Dashboard</p>
                 </a>
               </li>
+
+              
               <?php /*
               <li class="nav-item active">
                 <a
@@ -287,6 +289,41 @@
                 </div>
               </li>
               */?>
+
+              <li class="nav-section">
+                <span class="sidebar-mini-icon">
+                  <i class="fa fa-ellipsis-h"></i>
+                </span>
+                <h4 class="text-section">MENU</h4>
+              </li>
+
+              <li class="nav-item <?php if($page_name == 'office/vendor_application'){ echo "active"; } ?>">
+                <a href="<?php echo base_url('office/vendor_application'); ?>">
+                  <i class="fas fa-briefcase"></i>
+                  <p>Vendor Applications</p>
+                  <!-- <span class="badge badge-primary">10</span> -->
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="<?php echo base_url('office'); ?>">
+                  <i class="fas fa-clipboard"></i>
+                  <p>Package Applications</p>
+                  <!-- <span class="badge badge-primary">10</span> -->
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="<?php echo base_url('office'); ?>">
+                  <i class="fas fa-comments"></i>
+                  <p>Feedback</p>
+                  <!-- <span class="badge badge-primary">10</span> -->
+                </a>
+              </li>
+
+  
+              <?php /*
+
                <li class="nav-section">
                 <span class="sidebar-mini-icon">
                   <i class="fa fa-ellipsis-h"></i>
@@ -353,6 +390,7 @@
                   <p>User List</p>
                 </a>
               </li>
+              */?>
             </ul>
           </div>
         </div>
