@@ -28,7 +28,15 @@ class Office extends CI_Controller {
             // not logged in
             redirect('');
             return;
-        }
+        }else{
+			// check role
+			$role = $this->session->userdata('role');
+			if ($role != '1') {
+				// not office role
+				redirect('');
+				return;
+			}
+		}
 	}
 
 	public function index()

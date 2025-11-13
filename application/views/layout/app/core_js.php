@@ -111,6 +111,72 @@
         
       });
 
+  
+      $(document).on('click', '.btn-delete-package', function (event) {
+          event.preventDefault();
+
+          var packageId = $(this).data('package-id');
+
+          swal({
+              title: "Are you sure?",
+              text: "Once deleted, you will not be able to recover this package!",
+              type: "warning",
+              icon: "warning",
+              buttons: {
+                cancel: {
+                  visible: true,
+                  text: "Cancel",
+                  className: "btn btn-danger",
+                },
+                confirm: {
+                  text: "Yes, delete it!",
+                  className: "btn btn-primary",
+                },
+              },
+            }).then((willDelete) => {
+              if (willDelete) {
+
+                  $.ajax({
+                  type: "POST",
+                  url: base_url + 'vendor/delete_package',
+                  async: true,
+                  dataType: 'json',
+                  data: {package_id: packageId},
+                  success: function(data) {
+                    console.log(data);
+                    if (data.status === 'success') {
+                      
+
+                      swal(data.message, {
+                      icon: "success",
+                      title: "Success !",
+                      text: data.message,
+                      buttons: {
+                        confirm: {
+                          className: "btn btn-primary",
+                        },
+                      },
+                    }).then((value) => {
+                      // This runs when the confirm button is clicked
+                      if (value) {
+                          location.reload();
+                      }
+                    });
+
+
+                    } else {
+                      alert(data.message);
+                    }
+                  },
+                  error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                  }
+                });
+
+              }
+            });
+      });
+
       $(document).on('click', '#btn-proceed-vendor', function (event) {
           event.preventDefault();
 
@@ -295,6 +361,51 @@
 
       $("#basic-datatables-rejected").DataTable({
         "ordering": false
+      });
+
+      $(document).on('click', '.is-publish', function(e) {
+          e.preventDefault;
+          var isChecked = $(this).prev('input[type="checkbox"]').is(':checked');
+          var packageId = $(this).data('package-id');
+          // alert(packageId + ' is checked: ' + isChecked); return;
+
+
+          // isChecked == false, consider as published
+
+          $.ajax({
+            type: "POST",
+            url: base_url + 'vendor/toggle_publish_package',
+            data: {package_id: packageId, is_published: isChecked},
+            async: true,
+            dataType: 'json',
+            success: function(data) {
+              console.log(data);
+              if (data.status === 'success') {
+                $.notify({
+                  icon: 'icon-bell',
+                  title: data.title,
+                  message: data.message,
+                },{
+                  type: data.type,
+                  placement: {
+                    from: "top",
+                    align: "right"
+                  },
+                  time: 1000,
+                });
+                // set timer to reload page after 1 second
+                setTimeout(function() {
+                  location.reload();
+                }, 1000);
+                // location.reload();
+              } else {
+                alert(data.message);
+              }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+              console.log(textStatus, errorThrown);
+            }
+      });
       });
 
       $(document).on('click', '.add-category', function(e) {

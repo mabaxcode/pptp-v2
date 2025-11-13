@@ -12,7 +12,15 @@ class Vendor extends CI_Controller {
             // not logged in
             redirect('');
             return;
-        }
+        }else{
+			// check role
+			$role = $this->session->userdata('role');
+			if ($role != '2') {
+				// not vendor role
+				redirect('');
+				return;
+			}
+		}
 	}
 
 	public function index()
@@ -508,7 +516,7 @@ class Vendor extends CI_Controller {
 	public function edit_package($id)
 	{   
 		$data['page_title'] = 'Edit Package';
-		$data['page_name'] = 'office/edit_package';
+		$data['page_name'] = 'vendor/edit_package';
 
 		$data['package'] = $this->db->get_where('packages', array('id' => $id))->row_array();
 		$data['categories'] = $this->db->get('categories')->result_array();
@@ -519,7 +527,7 @@ class Vendor extends CI_Controller {
 
 		$data['package_items'] = $this->db->get_where('package_items', array('package_id' => $id))->result_array();
 
-		$this->load->view('office/main', $data);
+		$this->load->view('vendor/main', $data);
 	}
 
 	function do_edit_package(){
@@ -554,7 +562,7 @@ class Vendor extends CI_Controller {
 		$this->form_validation->set_rules('description', 'Description', 'required');
 		if ($this->form_validation->run() == FALSE) {
 			$this->session->set_flashdata('error', validation_errors());
-			redirect('office/add_package');
+			redirect('vendor/add_package');
 
 		}else{
 			$id = $this->edit_package_to_db($data);
@@ -579,12 +587,12 @@ class Vendor extends CI_Controller {
 				} else {
 					// Upload failed
 					$this->session->set_flashdata('error', $this->upload->display_errors());
-					redirect('office/edit_package/' . $package_id);
+					redirect('vendor/edit_package/' . $package_id);
 				}
 			}
 
 			$this->session->set_flashdata('success', 'Package has been updated successfully.');
-			redirect('office/edit_package/' . $package_id);
+			redirect('vendor/edit_package/' . $package_id);
 		}
 	}
 
@@ -595,11 +603,20 @@ class Vendor extends CI_Controller {
 		return $package_id;
 	}
 
-	function delete_package($id) {
+	function delete_package($data=false) {
+
+		$id = $this->input->post('package_id');
 		$this->db->where('id', $id);
 		$this->db->delete('packages');
-		$this->session->set_flashdata('success', 'Package has been deleted successfully.');
-		redirect('office/manage_package');
+
+		$response = array(
+			'status' => 'success',
+			'message' => 'Package has been deleted successfully.'
+		);
+		echo json_encode($response);
+
+		// $this->session->set_flashdata('success', 'Package has been deleted successfully.');
+		// redirect('vendor/manage_package');
 	}
 
 	function delete_category($id) {
@@ -918,5 +935,48 @@ class Vendor extends CI_Controller {
 		$this->db->update('users', array('blocked' => '1'));
 		$this->session->set_flashdata('success', 'User has been blocked successfully.');
 		redirect('office/user_list');
+	}
+
+	function toggle_publish_package()
+	{
+		$package_id = $this->input->post('package_id');
+		$is_published = $this->input->post('is_published');
+
+		// Validate input
+		// echo $is_published; exit;
+
+		if ($is_published != 'true' && $is_published != 'false') {
+			$response = array(
+				'status' => 'error',
+				'message' => 'Invalid publish status.'
+			);
+			echo json_encode($response);
+			return;
+		}
+
+		// kalau false kira publish
+		if( $is_published == 'false'){
+			$is_published = '3';
+			$title = 'Published !';
+			$message = 'This package has been successfully published.';
+			$type = 'secondary';
+		}else{
+			$is_published = '1';
+			$title = 'Unpublished !';
+			$message = 'This package has been successfully unpublished.';
+			$type = 'danger';
+		}
+
+		// Update package status in database
+		$this->db->where('id', $package_id);
+		$this->db->update('packages', array('status' => $is_published));
+
+		$response = array(
+			'status' => 'success',
+			'title' => $title,
+			'type' => $type,
+			'message' => $message
+		);
+		echo json_encode($response);
 	}
 }

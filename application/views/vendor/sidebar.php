@@ -10,7 +10,7 @@
                 class="navbar-brand"
                 height="30"
               /> -->
-              <font style="color: #fff; font-size: 20px; font-weight: bold;">PPTP Admin</font>
+              <font style="color: #fff; font-size: 20px; font-weight: bold;">PPTP Vendor</font>
             </a>
             <div class="nav-toggle">
               <button class="btn btn-toggle toggle-sidebar">
@@ -301,35 +301,37 @@
               </li>
               <li class="nav-item <?php if ($page_name == 'office/booking') echo 'active'; ?>">
                 <a href="<?php echo base_url('office/booking'); ?>">
-                  <i class="fas fa-file"></i>
+                  <i class="far fa-calendar-check"></i>
                   <p>Booking</p>
                 </a>
               </li>
               <li class="nav-item <?php if ($page_name == 'office/payment_transaction') echo 'active'; ?>">
                 <a href="<?php echo base_url('office/payment_transaction'); ?>">
-                  <i class="fas fa-file"></i>
+                  <i class="fas fa-university"></i>
                   <p>Payment Transaction</p>
                 </a>
               </li>
-              <li class="nav-section">
+              <li class="nav-item">
+                <a href="<?php echo base_url('vendor'); ?>">
+                  <i class="fas fa-comments"></i>
+                  <p>Feedback</p>
+                  <!-- <span class="badge badge-primary">10</span> -->
+                </a>
+              </li>
+              <!-- <li class="nav-section">
                 <span class="sidebar-mini-icon">
                   <i class="fa fa-ellipsis-h"></i>
                 </span>
                 <h4 class="text-section">MANAGEMENT</h4>
-              </li>
-              <li class="nav-item <?php if ($page_name == 'office/manage_package') echo 'active'; ?>">
+              </li> -->
+              <!-- <li class="nav-item <?php if ($page_name == 'office/manage_package') echo 'active'; ?>">
                 <a href="<?php echo base_url('office/manage_package'); ?>">
                   <i class="fas fa-file"></i>
                   <p>Packages</p>
                 </a>
-              </li>
-              <li class="nav-item <?php if ($page_name == 'office/manage_gallery') echo 'active'; ?>">
-                <a href="<?php echo base_url('office/manage_gallery'); ?>">
-                  <i class="fas fa-file"></i>
-                  <p>Image Gallery</p>
-                </a>
-              </li>
-              <li class="nav-section">
+              </li> -->
+              
+              <!-- <li class="nav-section">
                 <span class="sidebar-mini-icon">
                   <i class="fa fa-ellipsis-h"></i>
                 </span>
@@ -346,19 +348,8 @@
                   <i class="fas fa-file"></i>
                   <p>Duration Package</p>
                 </a>
-              </li>
-              <li class="nav-section">
-                <span class="sidebar-mini-icon">
-                  <i class="fa fa-ellipsis-h"></i>
-                </span>
-                <h4 class="text-section">USER</h4>
-              </li>
-              <li class="nav-item <?php if ($page_name == 'office/user_list') echo 'active'; ?>">
-                <a href="<?php echo base_url('office/user_list'); ?>">
-                  <i class="fas fa-file"></i>
-                  <p>User List</p>
-                </a>
-              </li>
+              </li> -->
+              
             </ul>
           </div>
         </div>

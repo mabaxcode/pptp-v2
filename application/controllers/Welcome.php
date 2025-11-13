@@ -8,6 +8,28 @@ class Welcome extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->model('app_model');
+
+		// check login
+		$user_id = $this->session->userdata('user_id');
+		if (empty($user_id)) {
+			// user is not logged in
+			// redirect('');
+			// return;
+		}
+		else {
+			// check role
+			$role = $this->session->userdata('role');
+			if ($role == '1') {
+				// not general user role
+				redirect('office');
+				return;
+			}
+			if ($role == '2') {
+				// not general user role
+				redirect('vendor');
+				return;
+			}
+		}
 	}
 
 	public function index()

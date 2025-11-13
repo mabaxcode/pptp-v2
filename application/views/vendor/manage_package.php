@@ -47,14 +47,26 @@
                             <th width="20%">Package Name</th>
                             <th width="35%">Description</th>
                             <th width="15%">Cover Photo</th>
-                            <th width="10%" style="text-align:center;">Status</th>
+                            <th width="10%" style="text-align:center;">Publish</th>
                             <th width="15%" style="text-align:center;">Action</th>
                           </tr>
                         </thead>
                         <tbody>
                           <?php foreach ($packages as $package): ?>
                           <tr>
-                            <td><?php echo $package['package_name']; ?></td>
+                            <td>
+                              <?php echo $package['package_name']; ?>
+                              <br>
+                              <?php if ($package['status'] == '0'): ?>
+                                  <span class="badge badge-warning"><b>In Review</b></span>
+                              <?php elseif ($package['status'] == '1'): ?>
+                                  <span class="badge badge-primary"><b>Approved</b></span>
+                              <?php elseif ($package['status'] == '2'): ?>
+                                  <span class="badge badge-danger"><b>Rejected</b></span>
+                              <?php elseif ($package['status'] == '3'): ?>
+                                  <span class="badge badge-success"><b>Published</b></span>
+                              <?php endif; ?>
+                            </td>
                             <td>
                               <?php echo $package['description']; ?>
                               <!-- <br> -->
@@ -84,23 +96,31 @@
                               <?php endif; ?>
                             </td>
                             <td align="center">
-                                <?php if ($package['status'] == '0'): ?>
-                                    <span class="badge badge-warning"><b>In Review</b></span>
-                                <?php elseif ($package['status'] == '1'): ?>
-                                    <span class="badge badge-primary"><b>Approved</b></span>
-                                <?php elseif ($package['status'] == '2'): ?>
-                                    <span class="badge badge-danger"><b>Rejected</b></span>
-                                <?php elseif ($package['status'] == '3'): ?>
-                                    <span class="badge badge-success"><b>Published</b></span>
-                                <?php endif; ?>
+                              <?php if ($package['status'] == '1' || $package['status'] == '3'): ?>
+                                  <label class="switch">
+                                    <input type="checkbox" <?php echo ($package['status'] == '3') ? 'checked' : ''; ?>>
+                                    <span class="slider round is-publish" data-package-id="<?php echo $package['id']; ?>"></span>
+                                  </label>
+                              <?php endif; ?>
                             </td>
                             <td align="center">
                                 <?php if ($package['status'] <> '0'): ?>
                                     <?php if ($package['status'] <> '2'): ?>
-                                        <a href="<?php echo base_url('office/edit_package/' . $package['id']); ?>" class="btn btn-sm btn-warning">Edit</a>
+                                        <?php /*<a href="<?php echo base_url('office/edit_package/' . $package['id']); ?>" class="btn btn-sm btn-warning">Edit</a> */?>
+                                        <a class="btn btn-icon btn-warning" href="<?php echo base_url('vendor/edit_package/' . $package['id']); ?>"><i class="fas fa-pencil-alt"></i></a>
                                     <?php endif; ?>
-                                    <a href="<?php echo base_url('office/delete_package/' . $package['id']); ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this package?');">Delete</a>
+                                    <a class="btn btn-icon btn-danger btn-delete-package" data-package-id="<?php echo $package['id']; ?>"><i class="fas fa-trash"></i></a>
+                                    <?php /*<a href="<?php echo base_url('vendor/delete_package/' . $package['id']); ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this package?');">Delete</a> */?>
                                 <?php endif; ?>
+
+                                <?php if ($package['status'] == '1' || $package['status'] == '3'): ?>
+                                    <a class="btn btn-icon btn-info" title="View Details" href="<?php echo base_url('vendor/view_package/' . $package['id']); ?>"><i class="fas fa-eye"></i></a>
+                                <?php endif; ?>
+                                
+                                <?php if ($package['status'] == '0'): ?>
+                                    <a class="btn btn-icon btn-info" title="View Details" href="<?php echo base_url('vendor/view_package/' . $package['id']); ?>"><i class="fas fa-eye"></i></a>
+                                <?php endif; ?>
+
                             </td>
                           </tr>
                           <?php endforeach; ?>

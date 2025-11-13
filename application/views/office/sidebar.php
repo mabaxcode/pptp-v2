@@ -321,6 +321,52 @@
                 </a>
               </li>
 
+              
+
+              <li class="nav-section">
+                <span class="sidebar-mini-icon">
+                  <i class="fa fa-ellipsis-h"></i>
+                </span>
+                <h4 class="text-section">MANAGEMENT</h4>
+              </li>
+              <li class="nav-item <?php if ($page_name == 'office/manage_gallery') echo 'active'; ?>">
+                <a href="<?php echo base_url('office/manage_gallery'); ?>">
+                  <i class="fas fa-file-image"></i>
+                  <p>Manage Photo Gallery</p>
+                </a>
+              </li>
+              <li class="nav-item <?php if ($page_name == 'office/manage_category') echo 'active'; ?>">
+                <a href="<?php echo base_url('office/manage_category'); ?>">
+                  <i class="fas fa-th-list"></i>
+                  <p>Manage Category</p>
+                </a>
+              </li>
+               <li class="nav-item <?php if ($page_name == 'office/manage_duration') echo 'active'; ?>">
+                <a href="<?php echo base_url('office/manage_duration'); ?>">
+                  <i class="fas fa-cog"></i>
+                  <p>Manage Package Duration</p>
+                </a>
+              </li>
+
+              <li class="nav-section">
+                <span class="sidebar-mini-icon">
+                  <i class="fa fa-ellipsis-h"></i>
+                </span>
+                <h4 class="text-section">USER MANAGEMENT</h4>
+              </li>
+              <li class="nav-item <?php if ($page_name == 'office/user_list') echo 'active'; ?>">
+                <a href="<?php echo base_url('office/user_list'); ?>">
+                  <i class="fas fa-user-tag"></i>
+                  <p>Vendor List</p>
+                </a>
+              </li>
+              <li class="nav-item <?php if ($page_name == 'office/user_list') echo 'active'; ?>">
+                <a href="<?php echo base_url('office/user_list'); ?>">
+                  <i class="fas fa-users"></i>
+                  <p>User List</p>
+                </a>
+              </li>
+
   
               <?php /*
 
@@ -354,30 +400,8 @@
                   <p>Packages</p>
                 </a>
               </li>
-              <li class="nav-item <?php if ($page_name == 'office/manage_gallery') echo 'active'; ?>">
-                <a href="<?php echo base_url('office/manage_gallery'); ?>">
-                  <i class="fas fa-file"></i>
-                  <p>Image Gallery</p>
-                </a>
-              </li>
-              <li class="nav-section">
-                <span class="sidebar-mini-icon">
-                  <i class="fa fa-ellipsis-h"></i>
-                </span>
-                <h4 class="text-section">SETTING</h4>
-              </li>
-              <li class="nav-item <?php if ($page_name == 'office/manage_category') echo 'active'; ?>">
-                <a href="<?php echo base_url('office/manage_category'); ?>">
-                  <i class="fas fa-file"></i>
-                  <p>Category</p>
-                </a>
-              </li>
-               <li class="nav-item <?php if ($page_name == 'office/manage_duration') echo 'active'; ?>">
-                <a href="<?php echo base_url('office/manage_duration'); ?>">
-                  <i class="fas fa-file"></i>
-                  <p>Duration Package</p>
-                </a>
-              </li>
+              
+              
               <li class="nav-section">
                 <span class="sidebar-mini-icon">
                   <i class="fa fa-ellipsis-h"></i>

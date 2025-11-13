@@ -39,6 +39,7 @@ class Auth extends CI_Controller {
             // set session
             $this->session->set_userdata('user_id', $user->id);
             $this->session->set_userdata('user_name', $user->name);
+            $this->session->set_userdata('role', $user->role);
 
             update_any_table(
                 array('online' => '1'),
